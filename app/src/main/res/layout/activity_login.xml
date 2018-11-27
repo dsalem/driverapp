@@ -71,7 +71,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="sign in"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:onClick="signIn"/>
             <Button
                 android:id="@+id/email_register_button"
                 style="?android:textAppearanceSmall"
@@ -79,7 +80,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="register"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:onClick="register"/>
 
         </LinearLayout>
     </ScrollView>
