@@ -383,6 +383,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     public void signIn() {
+        if(sharedPreferences.contains(Email)){
+            mEmailView.setText(sharedPreferences.getString(Email,""));
+        }
+
+        if(sharedPreferences.contains(Password)){
+           mPasswordView.setText(sharedPreferences.getString(Password,""));
+        }
+
+        else{
+            // in case that we cant find data on phone
+            //
+        }
         checkFieldsInput();
 
     }
