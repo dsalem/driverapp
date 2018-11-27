@@ -383,19 +383,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     public void signIn() {
-        if(sharedPreferences.contains(Email)){
-            mEmailView.setText(sharedPreferences.getString(Email,""));
-        }
-
-        if(sharedPreferences.contains(Password)){
-           mPasswordView.setText(sharedPreferences.getString(Password,""));
-        }
-
-        else{
-            // in case that we cant find data on phone
-            //
-        }
         checkFieldsInput();
+
+        if (sharedPreferences.contains(Email)) {
+            mEmailView.setText(sharedPreferences.getString(Email, ""));
+        }
+
+        if (sharedPreferences.contains(Password)) {
+            mPasswordView.setText(sharedPreferences.getString(Password, ""));
+        } else if (false) {
+            // in case that we cant find data on phone
+            // we will get data stored in database
+        } else {
+            Toast.makeText(getApplicationContext(), "You are not in the system you need to register.", Toast.LENGTH_SHORT).show();
+            resetView();
+        }
 
     }
 
@@ -405,13 +407,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         String et_password = mPasswordView.getText().toString();
 
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(Email,et_email);
-        editor.putString(Password,et_password);
+        editor.putString(Email, et_email);
+        editor.putString(Password, et_password);
         editor.commit();
-        Toast.makeText(getApplicationContext(),"Your information was saved succesfully!",Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "Your information was saved succesfully!", Toast.LENGTH_SHORT).show();
 
         // TODO: register in fireBase to.
 
+    }
+
+    private void resetView() {
+        mEmailView.setText("");
+        mPasswordView.setText("");
     }
 }
 
