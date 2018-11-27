@@ -3,6 +3,7 @@ package com.pickapp.driverapp;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -28,6 +29,9 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import android.content.SharedPreferences;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,44 +65,67 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private Button mEmailSignInButton;
+    private Button mRegisterButton;
+
+    private SharedPreferences sharedPreferences;
+    public static final String MyPreference = "mypref";
+    public static final String Email = "email_add";
+    public static final String Password = "password";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        // a call for a method the connects all the views
+        findViews();
+
+        // set listerenrs for all buttons
+        setListeners();
+
         // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
 
+    }
+
+    private void findViews() {
+        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         mPasswordView = (EditText) findViewById(R.id.password);
+        mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        mRegisterButton = (Button) findViewById(R.id.email_register_button);
+        mLoginFormView = findViewById(R.id.login_form);
+        mProgressView = findViewById(R.id.login_progress);
+
+        sharedPreferences = getSharedPreferences(MyPreference, Context.MODE_PRIVATE);
+    }
+
+    private void setListeners() {
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
+                    checkFieldsInput();
                     return true;
                 }
                 return false;
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                attemptLogin();
-            }
-        });
-        Button mRegisterButton = (Button) findViewById(R.id.email_register_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                attemptLogin();
+                signIn();
             }
         });
 
-        mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
+        mRegisterButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                register();
+            }
+        });
     }
 
     private void populateAutoComplete() {
@@ -150,7 +177,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
-    private void attemptLogin() {
+    private void checkFieldsInput() {
         if (mAuthTask != null) {
             return;
         }
@@ -198,6 +225,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private boolean isEmailValid(String email) {
+
         //TODO: Replace this with your own logic
         return email.contains("@");
     }
@@ -352,6 +380,26 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = null;
             showProgress(false);
         }
+    }
+
+    public void signIn() {
+        checkFieldsInput();
+
+    }
+
+    public void register() {
+        checkFieldsInput();
+        String et_email = mEmailView.getText().toString();
+        String et_password = mPasswordView.getText().toString();
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(Email,et_email);
+        editor.putString(Password,et_password);
+        editor.commit();
+        Toast.makeText(getApplicationContext(),"Your information was saved succesfully!",Toast.LENGTH_SHORT).show();
+
+        // TODO: register in fireBase to.
+
     }
 }
 
