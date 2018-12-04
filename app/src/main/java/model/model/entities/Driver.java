@@ -10,6 +10,7 @@ public class Driver {
     private Long phoneNumber;
     private String emailAddress;
     private Long creditCard;
+    private String password;
 
     /**
      *
@@ -20,12 +21,13 @@ public class Driver {
      * @param emailAddress
      * @param creditCard
      */
-    public Driver(String lastName, String firstName, Long id, Long phoneNumber, String emailAddress, Long creditCard) {
+    public Driver(String lastName, String firstName, Long id, Long phoneNumber, String emailAddress,String password, Long creditCard) {
         this.lastName = lastName;
         this.firstName = firstName;
         this.id = id;
         this.phoneNumber = phoneNumber;
         this.emailAddress = emailAddress;
+        this.password = password;
         this.creditCard = creditCard;
     }
 
@@ -123,5 +125,13 @@ public class Driver {
      */
     public void setCreditCard(Long creditCard) {
         this.creditCard = creditCard;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

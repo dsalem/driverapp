@@ -134,7 +134,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 try {
                     Intent intent = new Intent(LoginActivity.this,RegisterActivity.class);
                     startActivity(intent);
-                    register(view);
+                   // register(view);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -413,7 +413,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
 
     }
-
+/*
     public void register(View v) throws Exception {
 
         try {
@@ -459,7 +459,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             Toast.makeText(getBaseContext(), "Error ", Toast.LENGTH_LONG).show();
         }
     }
-
+*/
     private void resetView() {
         mEmailView.setText("");
         mPasswordView.setText("");
