@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -37,6 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.model.backend.Backend;
+import model.model.datasource.BackendFactory;
 import model.model.datasource.Firebase_DBManager;
 import model.model.entities.Driver;
 
@@ -83,6 +85,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        backend = BackendFactory.getInstance();
         // a call for a method the connects all the views
         findViews();
 
@@ -129,6 +132,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             @Override
             public void onClick(View view) {
                 try {
+                    Intent intent = new Intent(LoginActivity.this,RegisterActivity.class);
+                    startActivity(intent);
                     register(view);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -234,9 +239,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private boolean isEmailValid(String email) {
-
-        //TODO: Replace this with your own logic
-        return email.contains("@");
+        String EMAIL_REGEX = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
+        return email.matches(EMAIL_REGEX);
     }
 
     private boolean isPasswordValid(String password) {
@@ -410,47 +414,47 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     }
 
-    public void register(View v)  throws Exception {
+    public void register(View v) throws Exception {
 
         try {
-        checkFieldsInput();
-        String et_email = mEmailView.getText().toString();
-        String et_password = mPasswordView.getText().toString();
-        long longPassword = Long.parseLong(et_password);
 
-        //TODO actually make these in the register activity
-        String et_fName = "john";
-        String et_lName = "Smith";
-        long et_phoneNumber = 34565432;
-        long et_creditCard = 123456789;
+            //TODO actually make these in the register activity
+            String et_fName = "john";
+            String et_lName = "Smith";
+            long et_phoneNumber = 34565432;
+            long et_creditCard = 123456789;
 
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(Email, et_email);
-        editor.putString(Password, et_password);
-        editor.commit();
-        Toast.makeText(getApplicationContext(), "Your information was saved succesfully!", Toast.LENGTH_SHORT).show();
+            String et_email = mEmailView.getText().toString();
+            String et_password = mPasswordView.getText().toString();
+            long longPassword = Long.parseLong(et_password);
 
-        // TODO: register in fireBase to.
-        Driver myDriver = new Driver(et_fName, et_lName,longPassword,et_phoneNumber,et_email,et_creditCard);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString(Email, et_email);
+            editor.putString(Password, et_password);
+            editor.commit();
+            Toast.makeText(getApplicationContext(), "Your information was saved succesfully!", Toast.LENGTH_SHORT).show();
 
-        backend.addDriver(myDriver, new Firebase_DBManager.Action<Long>() {
-            @Override
-            public void onSuccess(Long obj) {
-                Toast.makeText(getBaseContext(), "successfully addded you to the database" , Toast.LENGTH_LONG).show();
-                resetView();
-            }
+            // TODO: register in fireBase to.
+            Driver myDriver = new Driver(et_fName, et_lName, longPassword, et_phoneNumber, et_email, et_creditCard);
 
-            @Override
-            public void onFailure(Exception exception) {
-                Toast.makeText(getBaseContext(), "Error \n" + exception.getMessage(), Toast.LENGTH_LONG).show();
-                //resetView();
-            }
+            backend.addDriver(myDriver, new Firebase_DBManager.Action<Long>() {
+                @Override
+                public void onSuccess(Long obj) {
+                    Toast.makeText(getBaseContext(), "successfully addded you to the database", Toast.LENGTH_LONG).show();
+                    resetView();
+                }
 
-            @Override
-            public void onProgress(String status, double percent) {
+                @Override
+                public void onFailure(Exception exception) {
+                    Toast.makeText(getBaseContext(), "Error \n" + exception.getMessage(), Toast.LENGTH_LONG).show();
+                    //resetView();
+                }
 
-            }
-        });
+                @Override
+                public void onProgress(String status, double percent) {
+
+                }
+            });
         } catch (Exception e) {
             Toast.makeText(getBaseContext(), "Error ", Toast.LENGTH_LONG).show();
         }
