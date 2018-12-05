@@ -34,6 +34,9 @@ import android.widget.TextView;
 import android.content.SharedPreferences;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -132,9 +135,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             @Override
             public void onClick(View view) {
                 try {
-                    Intent intent = new Intent(LoginActivity.this,RegisterActivity.class);
+                    Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                     startActivity(intent);
-                   // register(view);
+                    // register(view);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -396,15 +399,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     public void signIn() {
-        checkFieldsInput();
 
+        boolean isInfoSaved = false;
         if (sharedPreferences.contains(Email)) {
             mEmailView.setText(sharedPreferences.getString(Email, ""));
+
         }
 
         if (sharedPreferences.contains(Password)) {
             mPasswordView.setText(sharedPreferences.getString(Password, ""));
-        } else if (false) {
+            isInfoSaved = true;
+        }
+        checkFieldsInput();
+        if (isInfoSaved) {
             // in case that we cant find data on phone
             // we will get data stored in database
         } else {
@@ -413,53 +420,54 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
 
     }
-/*
-    public void register(View v) throws Exception {
 
-        try {
+    /*
+        public void register(View v) throws Exception {
 
-            //TODO actually make these in the register activity
-            String et_fName = "john";
-            String et_lName = "Smith";
-            long et_phoneNumber = 34565432;
-            long et_creditCard = 123456789;
+            try {
 
-            String et_email = mEmailView.getText().toString();
-            String et_password = mPasswordView.getText().toString();
-            long longPassword = Long.parseLong(et_password);
+                //TODO actually make these in the register activity
+                String et_fName = "john";
+                String et_lName = "Smith";
+                long et_phoneNumber = 34565432;
+                long et_creditCard = 123456789;
 
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString(Email, et_email);
-            editor.putString(Password, et_password);
-            editor.commit();
-            Toast.makeText(getApplicationContext(), "Your information was saved succesfully!", Toast.LENGTH_SHORT).show();
+                String et_email = mEmailView.getText().toString();
+                String et_password = mPasswordView.getText().toString();
+                long longPassword = Long.parseLong(et_password);
 
-            // TODO: register in fireBase to.
-            Driver myDriver = new Driver(et_fName, et_lName, longPassword, et_phoneNumber, et_email, et_creditCard);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString(Email, et_email);
+                editor.putString(Password, et_password);
+                editor.commit();
+                Toast.makeText(getApplicationContext(), "Your information was saved succesfully!", Toast.LENGTH_SHORT).show();
 
-            backend.addDriver(myDriver, new Firebase_DBManager.Action<Long>() {
-                @Override
-                public void onSuccess(Long obj) {
-                    Toast.makeText(getBaseContext(), "successfully addded you to the database", Toast.LENGTH_LONG).show();
-                    resetView();
-                }
+                // TODO: register in fireBase to.
+                Driver myDriver = new Driver(et_fName, et_lName, longPassword, et_phoneNumber, et_email, et_creditCard);
 
-                @Override
-                public void onFailure(Exception exception) {
-                    Toast.makeText(getBaseContext(), "Error \n" + exception.getMessage(), Toast.LENGTH_LONG).show();
-                    //resetView();
-                }
+                backend.addDriver(myDriver, new Firebase_DBManager.Action<Long>() {
+                    @Override
+                    public void onSuccess(Long obj) {
+                        Toast.makeText(getBaseContext(), "successfully addded you to the database", Toast.LENGTH_LONG).show();
+                        resetView();
+                    }
 
-                @Override
-                public void onProgress(String status, double percent) {
+                    @Override
+                    public void onFailure(Exception exception) {
+                        Toast.makeText(getBaseContext(), "Error \n" + exception.getMessage(), Toast.LENGTH_LONG).show();
+                        //resetView();
+                    }
 
-                }
-            });
-        } catch (Exception e) {
-            Toast.makeText(getBaseContext(), "Error ", Toast.LENGTH_LONG).show();
+                    @Override
+                    public void onProgress(String status, double percent) {
+
+                    }
+                });
+            } catch (Exception e) {
+                Toast.makeText(getBaseContext(), "Error ", Toast.LENGTH_LONG).show();
+            }
         }
-    }
-*/
+    */
     private void resetView() {
         mEmailView.setText("");
         mPasswordView.setText("");

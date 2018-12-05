@@ -59,11 +59,12 @@ public class RegisterActivity extends AppCompatActivity {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                checkFieldsInput(v);
-               // try {
-              //      register(v);
-             //   }
-             //   catch (Exception e){}
+                //checkFieldsInput(v);
+                try {
+                    register(v);
+                } catch (Exception e) {
+
+                }
             }
         });
     }
@@ -129,9 +130,14 @@ public class RegisterActivity extends AppCompatActivity {
         // Store values at the time of the login attempt.
         String et_fName = firtName.getText().toString();
         String et_lName = lastName.getText().toString();
+
+        //  Long et_phoneNumber = Long.valueOf(phoneNumber.getText().toString()).longValue();
+        //  Long et_id = Long.valueOf(id.getText().toString()).longValue();
+        //Long et_creditCard = Long.valueOf(creditCard.getText().toString()).longValue();
+
         Long et_phoneNumber = Long.parseLong(phoneNumber.getText().toString());
         Long et_id = Long.parseLong(id.getText().toString());
-        Long et_creditCard = Long.parseLong(creditCard.getText().toString());
+       Long et_creditCard = Long.parseLong(creditCard.getText().toString());
 
         String et_email = email.getText().toString();
         String et_password = password.getText().toString();
@@ -211,7 +217,6 @@ public class RegisterActivity extends AppCompatActivity {
             } catch (Exception e) {
 
             }
-
         }
     }
 
@@ -226,7 +231,13 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void resetView() {
-
+        lastName.setText("");
+        firtName.setText("");
+        id.setText("");
+        phoneNumber.setText("");
+        email.setText("");
+        password.setText("");
+        creditCard.setText("");
     }
 
 }

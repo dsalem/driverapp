@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:hint="ID"
                 android:imeActionLabel="@string/action_sign_in_short"
-                android:inputType="text"
+                android:inputType="number"
                 android:maxLines="1"
                 android:singleLine="true" />
         </android.support.design.widget.TextInputLayout>
@@ -112,7 +112,7 @@
                 android:layout_height="wrap_content"
                 android:hint="Credit card"
                 android:imeActionLabel="@string/action_sign_in_short"
-                android:inputType="text"
+                android:inputType="number"
                 android:maxLines="1"
                 android:singleLine="true" />
         </android.support.design.widget.TextInputLayout>
