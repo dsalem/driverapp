@@ -34,8 +34,8 @@ public class Firebase_DBManager implements Backend {
         void onFailure(Exception exception);
     }
 
-    static DatabaseReference DriversRef;
-    static List<Driver> DriverList;
+   public static DatabaseReference DriversRef;
+   public static List<Driver> DriverList;
 
     static {
 

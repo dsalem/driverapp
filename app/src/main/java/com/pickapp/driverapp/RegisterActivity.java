@@ -1,9 +1,12 @@
 package com.pickapp.driverapp;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -11,6 +14,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.net.IDN;
+import java.util.List;
 
 import model.model.backend.Backend;
 import model.model.datasource.BackendFactory;
@@ -34,14 +38,17 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText creditCard;
 
     private Button registerButton;
-
-
+    public static final String MyPreference = "mypref";
+    public static final String Email = "email_add";
+    public static final String Password = "password";
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         backend = BackendFactory.getInstance();
         findViews();
+
 
     }
 
@@ -55,16 +62,13 @@ public class RegisterActivity extends AppCompatActivity {
         password = (EditText) findViewById(R.id.Password);
         creditCard = (EditText) findViewById(R.id.CreditCard);
 
+        sharedPreferences = getSharedPreferences(MyPreference, Context.MODE_PRIVATE);
+
         registerButton = (Button) findViewById(R.id.register_button);
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //checkFieldsInput(v);
-                try {
-                    register(v);
-                } catch (Exception e) {
-
-                }
+                checkFieldsInput(v);
             }
         });
     }
@@ -80,6 +84,7 @@ public class RegisterActivity extends AppCompatActivity {
 
             String et_email = email.getText().toString();
             String et_password = password.getText().toString();
+
 
             // TODO: register in fireBase to.
             Driver myDriver = new Driver(et_lName, et_fName, et_id, et_phoneNumber, et_email, et_password, et_creditCard);
@@ -110,6 +115,8 @@ public class RegisterActivity extends AppCompatActivity {
             editor.putString(Password, et_password);
             editor.commit();
             Toast.makeText(getApplicationContext(), "Your information was saved succesfully!", Toast.LENGTH_SHORT).show();
+            resetView();
+            finish();
 
         } catch (Exception e) {
             Toast.makeText(getBaseContext(), "Error ", Toast.LENGTH_LONG).show();
@@ -137,7 +144,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         Long et_phoneNumber = Long.parseLong(phoneNumber.getText().toString());
         Long et_id = Long.parseLong(id.getText().toString());
-       Long et_creditCard = Long.parseLong(creditCard.getText().toString());
+        Long et_creditCard = Long.parseLong(creditCard.getText().toString());
 
         String et_email = email.getText().toString();
         String et_password = password.getText().toString();
@@ -146,35 +153,35 @@ public class RegisterActivity extends AppCompatActivity {
         View focusView = null;
 
         // Check for a last name, if the user entered one.
-        if (!TextUtils.isEmpty(et_lName)) {
+        if (TextUtils.isEmpty(et_lName)) {
             lastName.setError("enter last name");
             focusView = lastName;
             cancel = true;
         }
 
         // Check for a first name, if the user entered one.
-        if (!TextUtils.isEmpty(et_fName)) {
+        if (TextUtils.isEmpty(et_fName)) {
             firtName.setError("enter first name");
             focusView = firtName;
             cancel = true;
         }
 
         // Check for a id, if the user entered one.
-        if (!TextUtils.isEmpty(et_id.toString())) {
+        if (TextUtils.isEmpty(et_id.toString())) {
             id.setError("enter id");
             focusView = id;
             cancel = true;
         }
 
         // Check for a id, if its to short.
-        if (!(et_id.toString().length() <= 9)) {
+        if (et_id.toString().length() <= 10) {
             id.setError("id is to short");
             focusView = id;
             cancel = true;
         }
 
         // Check for a phone number, if the user entered one.
-        if (!TextUtils.isEmpty(et_phoneNumber.toString())) {
+        if (TextUtils.isEmpty(et_phoneNumber.toString())) {
             phoneNumber.setError("enter phone number");
             focusView = phoneNumber;
             cancel = true;
@@ -188,7 +195,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         // Check for a valid email address.
-        if (!TextUtils.isEmpty(et_email)) {
+        if (TextUtils.isEmpty(et_email)) {
             email.setError(getString(R.string.error_field_required));
             focusView = email;
             cancel = true;
@@ -199,7 +206,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         // Check for a credit card, if the user entered one.
-        if (!TextUtils.isEmpty(et_creditCard.toString())) {
+        if (TextUtils.isEmpty(et_creditCard.toString())) {
             creditCard.setError("enter a valid credit card number");
             focusView = creditCard;
             cancel = true;
@@ -226,7 +233,6 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
         return password.length() > 4;
     }
 
