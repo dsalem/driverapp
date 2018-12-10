@@ -80,7 +80,7 @@ public class RegisterActivity extends AppCompatActivity {
             registerButton.setEnabled(false);
             String et_fName = firtName.getText().toString();
             String et_lName = lastName.getText().toString();
-            Long et_phoneNumber = Long.parseLong(phoneNumber.getText().toString());
+            String et_phoneNumber = phoneNumber.getText().toString();
             Long et_id = Long.parseLong(id.getText().toString());
             Long et_creditCard = Long.parseLong(creditCard.getText().toString());
 
@@ -153,7 +153,7 @@ public class RegisterActivity extends AppCompatActivity {
         String et_fName = firtName.getText().toString();
         String et_lName = lastName.getText().toString();
 
-        Long et_phoneNumber = Long.parseLong(phoneNumber.getText().toString());
+        String et_phoneNumber = phoneNumber.getText().toString();
         Long et_id = Long.parseLong(id.getText().toString());
         Long et_creditCard = Long.parseLong(creditCard.getText().toString());
 
@@ -200,6 +200,11 @@ public class RegisterActivity extends AppCompatActivity {
         // Check for a phone number, if the user entered one.
         if (TextUtils.isEmpty(et_phoneNumber.toString())) {
             phoneNumber.setError("enter phone number");
+            focusView = phoneNumber;
+            cancel = true;
+        }
+        if (!et_phoneNumber.matches("^[0-9]*$") || !et_phoneNumber.startsWith("05")) {
+            phoneNumber.setError("invalid phone number");
             focusView = phoneNumber;
             cancel = true;
         }

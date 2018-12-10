@@ -7,7 +7,7 @@ public class Driver {
     private String lastName;
     private String firstName;
     private Long id;
-    private Long phoneNumber;
+    private String phoneNumber;
     private String emailAddress;
     private Long creditCard;
     private String password;
@@ -21,7 +21,7 @@ public class Driver {
      * @param emailAddress
      * @param creditCard
      */
-    public Driver(String lastName, String firstName, Long id, Long phoneNumber, String emailAddress,String password, Long creditCard) {
+    public Driver(String lastName, String firstName, Long id, String phoneNumber, String emailAddress,String password, Long creditCard) {
         this.lastName = lastName;
         this.firstName = firstName;
         this.id = id;
@@ -83,7 +83,7 @@ public class Driver {
      *
      * @return
      */
-    public Long getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
@@ -91,7 +91,7 @@ public class Driver {
      *
      * @param phoneNumber
      */
-    public void setPhoneNumber(Long phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 

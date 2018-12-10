@@ -95,6 +95,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // set listerenrs for all buttons
         setListeners();
 
+        // if there is data stored in the shared preferences it will be displayed
+        if (sharedPreferences.contains(Email)) {
+            mEmailView.setText(sharedPreferences.getString(Email, ""));
+
+        }
+
+        if (sharedPreferences.contains(Password)) {
+            mPasswordView.setText(sharedPreferences.getString(Password, ""));
+        }
+
         // Set up the login form.
         populateAutoComplete();
 
@@ -400,74 +410,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     public void signIn() {
 
-        boolean isInfoSaved = false;
-        if (sharedPreferences.contains(Email)) {
-            mEmailView.setText(sharedPreferences.getString(Email, ""));
-
-        }
-
-        if (sharedPreferences.contains(Password)) {
-            mPasswordView.setText(sharedPreferences.getString(Password, ""));
-            isInfoSaved = true;
-        }
         checkFieldsInput();
-        if (isInfoSaved) {
-            // in case that we cant find data on phone
-            // we will get data stored in database
-        } else {
+
+        // here we will authenticate the user in our data base
+
+        // David good luck!!!!
+
+        // this can be used for onFailure()
+       /*  {
             Toast.makeText(getApplicationContext(), "You are not in the system you need to register.", Toast.LENGTH_SHORT).show();
             resetView();
-        }
+        }*/
 
     }
 
-    /*
-        public void register(View v) throws Exception {
-
-            try {
-
-                //TODO actually make these in the register activity
-                String et_fName = "john";
-                String et_lName = "Smith";
-                long et_phoneNumber = 34565432;
-                long et_creditCard = 123456789;
-
-                String et_email = mEmailView.getText().toString();
-                String et_password = mPasswordView.getText().toString();
-                long longPassword = Long.parseLong(et_password);
-
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString(Email, et_email);
-                editor.putString(Password, et_password);
-                editor.commit();
-                Toast.makeText(getApplicationContext(), "Your information was saved succesfully!", Toast.LENGTH_SHORT).show();
-
-                // TODO: register in fireBase to.
-                Driver myDriver = new Driver(et_fName, et_lName, longPassword, et_phoneNumber, et_email, et_creditCard);
-
-                backend.addDriver(myDriver, new Firebase_DBManager.Action<Long>() {
-                    @Override
-                    public void onSuccess(Long obj) {
-                        Toast.makeText(getBaseContext(), "successfully addded you to the database", Toast.LENGTH_LONG).show();
-                        resetView();
-                    }
-
-                    @Override
-                    public void onFailure(Exception exception) {
-                        Toast.makeText(getBaseContext(), "Error \n" + exception.getMessage(), Toast.LENGTH_LONG).show();
-                        //resetView();
-                    }
-
-                    @Override
-                    public void onProgress(String status, double percent) {
-
-                    }
-                });
-            } catch (Exception e) {
-                Toast.makeText(getBaseContext(), "Error ", Toast.LENGTH_LONG).show();
-            }
-        }
-    */
     private void resetView() {
         mEmailView.setText("");
         mPasswordView.setText("");
