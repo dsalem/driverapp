@@ -41,15 +41,16 @@ public class RegisterActivity extends AppCompatActivity {
     public static final String MyPreference = "mypref";
     public static final String Email = "email_add";
     public static final String Password = "password";
-    
+
+    public List<Driver> driverList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         backend = BackendFactory.getInstance();
         findViews();
-
-
+        resetView();
     }
 
     private void findViews() {
@@ -76,6 +77,7 @@ public class RegisterActivity extends AppCompatActivity {
     public void register(View v) throws Exception {
 
         try {
+            registerButton.setEnabled(false);
             String et_fName = firtName.getText().toString();
             String et_lName = lastName.getText().toString();
             Long et_phoneNumber = Long.parseLong(phoneNumber.getText().toString());
@@ -85,20 +87,36 @@ public class RegisterActivity extends AppCompatActivity {
             String et_email = email.getText().toString();
             String et_password = password.getText().toString();
 
+            final Driver myDriver = new Driver(et_lName, et_fName, et_id, et_phoneNumber, et_email, et_password, et_creditCard);
 
-            // TODO: register in fireBase to.
-            Driver myDriver = new Driver(et_lName, et_fName, et_id, et_phoneNumber, et_email, et_password, et_creditCard);
-
-            backend.addDriver(myDriver, new Firebase_DBManager.Action<Long>() {
+            // checks if there is a person with same id
+            backend.isDriverInDataBase(myDriver, new Backend.Action() {
                 @Override
-                public void onSuccess(Long obj) {
-                    Toast.makeText(getBaseContext(), "successfully addded you to the database", Toast.LENGTH_LONG).show();
-                    resetView();
+                public void onSuccess() {
+                    // adds new account to database
+                    backend.addDriver(myDriver, new Backend.Action() {
+                        @Override
+                        public void onSuccess() {
+                            Toast.makeText(getBaseContext(), "successfully addded you to the database", Toast.LENGTH_LONG).show();
+                            resetView();
+                        }
+
+                        @Override
+                        public void onFailure(Exception exception) {
+                            Toast.makeText(getBaseContext(), "Error \n" + exception.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+
+                        @Override
+                        public void onProgress(String status, double percent) {}
+                    });
+
                 }
 
                 @Override
-                public void onFailure(Exception exception) {
-                    Toast.makeText(getBaseContext(), "Error \n" + exception.getMessage(), Toast.LENGTH_LONG).show();
+                public void onFailure(Exception e) {
+                    Toast.makeText(getBaseContext(), "Error \n" + e.getMessage(), Toast.LENGTH_LONG).show();
+
+                    registerButton.setEnabled(true);
                 }
 
                 @Override
@@ -108,14 +126,11 @@ public class RegisterActivity extends AppCompatActivity {
             });
 
             // Save info in the shared prefrences
-            //TODO actually make these in the register activity
 
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString(Email, et_email);
             editor.putString(Password, et_password);
             editor.commit();
-            Toast.makeText(getApplicationContext(), "Your information was saved succesfully!", Toast.LENGTH_SHORT).show();
-            resetView();
             finish();
 
         } catch (Exception e) {
@@ -137,10 +152,6 @@ public class RegisterActivity extends AppCompatActivity {
         // Store values at the time of the login attempt.
         String et_fName = firtName.getText().toString();
         String et_lName = lastName.getText().toString();
-
-        //  Long et_phoneNumber = Long.valueOf(phoneNumber.getText().toString()).longValue();
-        //  Long et_id = Long.valueOf(id.getText().toString()).longValue();
-        //Long et_creditCard = Long.valueOf(creditCard.getText().toString()).longValue();
 
         Long et_phoneNumber = Long.parseLong(phoneNumber.getText().toString());
         Long et_id = Long.parseLong(id.getText().toString());
@@ -174,7 +185,13 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         // Check for a id, if its to short.
-        if (et_id.toString().length() <= 10) {
+        if (TextUtils.isEmpty(et_id.toString())) {
+            id.setError("enter id");
+            focusView = id;
+            cancel = true;
+        }
+
+        if (et_id.toString().length() < 9) {
             id.setError("id is to short");
             focusView = id;
             cancel = true;
@@ -210,9 +227,7 @@ public class RegisterActivity extends AppCompatActivity {
             creditCard.setError("enter a valid credit card number");
             focusView = creditCard;
             cancel = true;
-        }
-
-        if (cancel) {
+        }if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
             focusView.requestFocus();
@@ -222,7 +237,7 @@ public class RegisterActivity extends AppCompatActivity {
             try {
                 register(v);
             } catch (Exception e) {
-
+                Toast.makeText(getBaseContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             }
         }
     }

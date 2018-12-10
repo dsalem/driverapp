@@ -9,6 +9,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -20,12 +21,14 @@ import model.model.entities.Ride;
 
 public class Firebase_DBManager implements Backend {
 
-    public interface Action<T> {
-        void onSuccess(T obj);
 
-        void onFailure(Exception exception);
+    static DatabaseReference DriversRef;
+    static List<Driver> DriverList;
+    static {
 
-        void onProgress(String status, double percent);
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DriversRef = database.getReference("Drivers");
+        DriverList = new ArrayList<>();
     }
 
     public interface NotifyDataChange<T> {
@@ -34,24 +37,13 @@ public class Firebase_DBManager implements Backend {
         void onFailure(Exception exception);
     }
 
-   public static DatabaseReference DriversRef;
-   public static List<Driver> DriverList;
-
-    static {
-
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DriversRef = database.getReference("Drivers");
-        DriverList = new ArrayList<>();
-    }
-
-
-    public void addDriver(final Driver Driver, final Action<Long> action) {
+    public void addDriver(final Driver Driver, final Action action) {
 
         String key = Driver.getId().toString();
         DriversRef.push().setValue(Driver).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                action.onSuccess(Driver.getId());
+                action.onSuccess();
                 action.onProgress("upload Ride data", 100);
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -64,7 +56,7 @@ public class Firebase_DBManager implements Backend {
         });
     }
 
-    public void removeDriver(long id, final Action<Long> action) {
+    public void removeDriver(long id, final Action action) {
 
         final String key = ((Long) id).toString();
 
@@ -78,7 +70,7 @@ public class Firebase_DBManager implements Backend {
                     DriversRef.child(key).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            action.onSuccess(value.getId());
+                            action.onSuccess();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
@@ -96,12 +88,12 @@ public class Firebase_DBManager implements Backend {
         });
     }
 
-    public void updateRide(final Driver toUpdate, final Action<Long> action) {
+    public void updateRide(final Driver toUpdate, final Action action) {
         //final String key = ((Long) toUpdate.getPhone()).toString();
 
         removeDriver(toUpdate.getId(), new Action<Long>() {
             @Override
-            public void onSuccess(Long obj) {
+            public void onSuccess() {
                 addDriver(toUpdate, action);
             }
 
@@ -119,13 +111,11 @@ public class Firebase_DBManager implements Backend {
 
     private static ChildEventListener DriverRefChildEventListener;
 
-    public static void notifyToDriverList(final NotifyDataChange<List<Driver>> notifyDataChange) {
-        if (notifyDataChange != null) {
-
-            if (DriverRefChildEventListener != null) {
-                notifyDataChange.onFailure(new Exception("first unNotify Driver list"));
-                return;
-            }
+    public void notifyToDriverList(final NotifyDataChange<List<Driver>> notifyDataChange) {
+        if (notifyDataChange != null) {if (DriverRefChildEventListener != null) {
+            notifyDataChange.onFailure(new Exception("first unNotify Driver list"));
+            return;
+        }
             DriverList.clear();
 
             DriverRefChildEventListener = new ChildEventListener() {
@@ -133,9 +123,8 @@ public class Firebase_DBManager implements Backend {
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     Driver Driver = dataSnapshot.getValue(Driver.class);
                     String id = dataSnapshot.getKey();
-                    Driver.setId(Long.parseLong(id));
+                    // Driver.setId(Long.parseLong(id));
                     DriverList.add(Driver);
-
 
                     notifyDataChange.OnDataChanged(DriverList);
                 }
@@ -184,11 +173,30 @@ public class Firebase_DBManager implements Backend {
         }
     }
 
-    public static void stopNotifyToDriverList() {
+    public void stopNotifyToDriverList() {
         if (DriverRefChildEventListener != null) {
             DriversRef.removeEventListener(DriverRefChildEventListener);
             DriverRefChildEventListener = null;
         }
+    }
+
+    public void isDriverInDataBase(final Driver driver, final Action action) {
+        Query query = DriversRef.orderByChild("id").equalTo(driver.getId());
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    action.onFailure(new Exception("your already have an acount"));
+                } else
+                    action.onSuccess();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
 // *********************  Rider methods for database *******************88
@@ -204,13 +212,11 @@ public class Firebase_DBManager implements Backend {
     }
 
 
-    public void addRide(final Ride Ride, final Action<Long> action) {
-
-        String key = Ride.getPassengerPhoneNumber().toString();
+    public void addRide(final Ride Ride, final Action action) {String key = Ride.getPassengerPhoneNumber().toString();
         RidesRef.push().setValue(Ride).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                action.onSuccess(Ride.getPassengerPhoneNumber());
+                action.onSuccess();
                 action.onProgress("upload Ride data", 100);
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -223,7 +229,7 @@ public class Firebase_DBManager implements Backend {
         });
     }
 
-    public void removeRide(long phone, final Action<Long> action) {
+    public void removeRide(long phone, final Action action) {
 
         final String key = ((Long) phone).toString();
 
@@ -237,7 +243,7 @@ public class Firebase_DBManager implements Backend {
                     RidesRef.child(key).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            action.onSuccess(value.getPassengerPhoneNumber());
+                            action.onSuccess();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
@@ -255,12 +261,12 @@ public class Firebase_DBManager implements Backend {
         });
     }
 
-    public void updateRide(final Ride toUpdate, final Action<Long> action) {
+    public void updateRide(final Ride toUpdate, final Action action) {
         //final String key = ((Long) toUpdate.getPhone()).toString();
 
         removeRide(toUpdate.getPassengerPhoneNumber(), new Action<Long>() {
             @Override
-            public void onSuccess(Long obj) {
+            public void onSuccess() {
                 addRide(toUpdate, action);
             }
 
@@ -303,10 +309,7 @@ public class Firebase_DBManager implements Backend {
                 public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                     Ride Ride = dataSnapshot.getValue(Ride.class);
                     Long phone = Long.parseLong(dataSnapshot.getKey());
-                    Ride.setPassengerPhoneNumber(phone);
-
-
-                    for (int i = 0; i < RideList.size(); i++) {
+                    Ride.setPassengerPhoneNumber(phone);for (int i = 0; i < RideList.size(); i++) {
                         if (RideList.get(i).getPassengerPhoneNumber().equals(phone)) {
                             RideList.set(i, Ride);
                             break;
