@@ -19,6 +19,8 @@ import model.model.backend.Backend;
 import model.model.entities.Driver;
 import model.model.entities.Ride;
 
+import static com.pickapp.driverapp.LoginActivity.Password;
+
 public class Firebase_DBManager implements Backend {
 
 
@@ -186,9 +188,28 @@ public class Firebase_DBManager implements Backend {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    action.onFailure(new Exception("your already have an acount"));
+                    action.onFailure(new Exception("your already have an account"));
                 } else
                     action.onSuccess();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+    public void isDriversPasswordCorrect(final Driver driver, final Action action) {
+        Query query = DriversRef.orderByChild("email").equalTo(driver.getEmailAddress());
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    if(dataSnapshot.getChildren().iterator().next().getValue(Driver.class).getPassword().equals( driver.getPassword()))
+                        action.onSuccess();
+                } else
+                    action.onFailure(new Exception("This email and/or password are not registered in the system"));
             }
 
             @Override

@@ -12,6 +12,11 @@ public class Driver {
     private Long creditCard;
     private String password;
 
+    public Driver(String emailAddress, String password) {
+        this.emailAddress = emailAddress;
+        this.password = password;
+    }
+
     /**
      *
      * @param lastName
@@ -19,6 +24,7 @@ public class Driver {
      * @param id
      * @param phoneNumber
      * @param emailAddress
+
      * @param creditCard
      */
     public Driver(String lastName, String firstName, Long id, String phoneNumber, String emailAddress,String password, Long creditCard) {

@@ -137,7 +137,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                signIn();
+               try {
+                   signIn();
+               }catch (Exception e){
+                   e.printStackTrace();
+               }
+
             }
         });
 
@@ -408,7 +413,52 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
-    public void signIn() {
+    public void signIn() throws Exception {
+        try {
+            mEmailSignInButton.setEnabled(false);
+            String et_email = mEmailView.getText().toString();
+            String et_password = mPasswordView.getText().toString();
+
+            final Driver myDriver = new Driver(et_email, et_password);
+
+            // checks if user and id exist in firebase
+            backend.isDriversPasswordCorrect(myDriver, new Backend.Action() {
+                @Override
+                public void onSuccess() {
+                    // open driver activity
+                    try {
+                        Intent intent = new Intent(LoginActivity.this, DriverActivity.class);
+                        startActivity(intent);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                    Toast.makeText(getBaseContext(), "Error \n" + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "You are not in the system you need to register.", Toast.LENGTH_SHORT).show();
+                    resetView();
+                    mEmailSignInButton.setEnabled(true);
+                }
+
+                @Override
+                public void onProgress(String status, double percent) {
+
+                }
+            });
+
+            // Save info in the shared prefrences
+
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString(Email, et_email);
+            editor.putString(Password, et_password);
+            editor.commit();
+            finish();
+
+        } catch (Exception e) {
+            Toast.makeText(getBaseContext(), "Error ", Toast.LENGTH_LONG).show();
+        }
 
         checkFieldsInput();
 
