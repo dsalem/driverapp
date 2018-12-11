@@ -12,11 +12,6 @@ public class Driver {
     private Long creditCard;
     private String password;
 
-    public Driver(String emailAddress, String password) {
-        this.emailAddress = emailAddress;
-        this.password = password;
-    }
-
     /**
      *
      * @param lastName
@@ -36,6 +31,8 @@ public class Driver {
         this.password = password;
         this.creditCard = creditCard;
     }
+
+    public Driver(){}
 
     /**
      *

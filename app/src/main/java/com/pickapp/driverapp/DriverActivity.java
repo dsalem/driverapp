@@ -23,7 +23,7 @@ public class DriverActivity extends AppCompatActivity
         setContentView(R.layout.activity_driver);
 
         // SIGN UP TO NOTIFICATIONS
-        startService(new Intent(this,NotificationService.class));
+       // startService(new Intent(this,NotificationService.class));
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

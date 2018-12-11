@@ -18,7 +18,7 @@ public interface Backend {
     void updateRide(final Driver toUpdate, final Action action);
 
     void isDriverInDataBase(final Driver driver, final Action action);
-    void isDriversPasswordCorrect(final Driver driver, final Action action);
+    void isDriversPasswordCorrect(String dEmail ,String dPassword, final Action action);
 
     // Rider methods
     void addRide(final Ride Ride, final Action action);

@@ -26,13 +26,13 @@ public class Firebase_DBManager implements Backend {
 
     static DatabaseReference DriversRef;
     static List<Driver> DriverList;
+
     static {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DriversRef = database.getReference("Drivers");
         DriverList = new ArrayList<>();
     }
-
 
 
     public void addDriver(final Driver Driver, final Action action) {
@@ -110,10 +110,11 @@ public class Firebase_DBManager implements Backend {
     private static ChildEventListener DriverRefChildEventListener;
 
     public void notifyToDriverList(final NotifyDataChange<List<Driver>> notifyDataChange) {
-        if (notifyDataChange != null) {if (DriverRefChildEventListener != null) {
-            notifyDataChange.onFailure(new Exception("first unNotify Driver list"));
-            return;
-        }
+        if (notifyDataChange != null) {
+            if (DriverRefChildEventListener != null) {
+                notifyDataChange.onFailure(new Exception("first unNotify Driver list"));
+                return;
+            }
             DriverList.clear();
 
             DriverRefChildEventListener = new ChildEventListener() {
@@ -196,14 +197,19 @@ public class Firebase_DBManager implements Backend {
         });
 
     }
-    public void isDriversPasswordCorrect(final Driver driver, final Action action) {
-        Query query = DriversRef.orderByChild("email").equalTo(driver.getEmailAddress());
+
+    public void isDriversPasswordCorrect(String dEmail, final String dPassword, final Action action) {
+        Query query = DriversRef.orderByChild("emailAddress").equalTo(dEmail);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    if(dataSnapshot.getChildren().iterator().next().getValue(Driver.class).getPassword().equals( driver.getPassword()))
+                    Driver currentDriver = dataSnapshot.getChildren().iterator().next().getValue(Driver.class);
+                    if (currentDriver.getPassword().equals(dPassword)) {
                         action.onSuccess();
+                    } else {
+                        action.onFailure(new Exception("Wrong password!"));
+                    }
                 } else
                     action.onFailure(new Exception("This email and/or password are not registered in the system"));
             }
@@ -229,7 +235,8 @@ public class Firebase_DBManager implements Backend {
     }
 
 
-    public void addRide(final Ride Ride, final Action action) {String key = Ride.getPassengerPhoneNumber().toString();
+    public void addRide(final Ride Ride, final Action action) {
+        String key = Ride.getPassengerPhoneNumber().toString();
         RidesRef.push().setValue(Ride).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -326,7 +333,8 @@ public class Firebase_DBManager implements Backend {
                 public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                     Ride Ride = dataSnapshot.getValue(Ride.class);
                     Long phone = Long.parseLong(dataSnapshot.getKey());
-                    Ride.setPassengerPhoneNumber(phone);for (int i = 0; i < RideList.size(); i++) {
+                    Ride.setPassengerPhoneNumber(phone);
+                    for (int i = 0; i < RideList.size(); i++) {
                         if (RideList.get(i).getPassengerPhoneNumber().equals(phone)) {
                             RideList.set(i, Ride);
                             break;

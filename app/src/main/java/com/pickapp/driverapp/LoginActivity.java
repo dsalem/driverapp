@@ -420,10 +420,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             String et_email = mEmailView.getText().toString();
             String et_password = mPasswordView.getText().toString();
 
-            final Driver myDriver = new Driver(et_email, et_password);
 
             // checks if user and id exist in firebase
-            backend.isDriversPasswordCorrect(myDriver, new Backend.Action() {
+            backend.isDriversPasswordCorrect(et_email,et_password, new Backend.Action() {
                 @Override
                 public void onSuccess() {
                     // open driver activity
@@ -437,9 +436,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                 @Override
                 public void onFailure(Exception e) {
-                    Toast.makeText(getBaseContext(), "Error \n" + e.getMessage(), Toast.LENGTH_LONG).show();
-                    Toast.makeText(getApplicationContext(), "You are not in the system you need to register.", Toast.LENGTH_SHORT).show();
-                    resetView();
+                    Toast.makeText(getBaseContext(),  e.getMessage(), Toast.LENGTH_LONG).show();
+                   // Toast.makeText(getApplicationContext(), "You are not in the system you need to register.", Toast.LENGTH_SHORT).show();
                     mEmailSignInButton.setEnabled(true);
                 }
 
