@@ -33,11 +33,7 @@ public class Firebase_DBManager implements Backend {
         DriverList = new ArrayList<>();
     }
 
-    public interface NotifyDataChange<T> {
-        void OnDataChanged(T obj);
 
-        void onFailure(Exception exception);
-    }
 
     public void addDriver(final Driver Driver, final Action action) {
 
@@ -305,7 +301,7 @@ public class Firebase_DBManager implements Backend {
 
     private static ChildEventListener RideRefChildEventListener;
 
-    public static void notifyToRideList(final NotifyDataChange<List<Ride>> notifyDataChange) {
+    public void notifyToRideList(final NotifyDataChange<List<Ride>> notifyDataChange) {
         if (notifyDataChange != null) {
 
             if (RideRefChildEventListener != null) {

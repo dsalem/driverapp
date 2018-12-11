@@ -3,6 +3,8 @@ package model.model.backend;
 import java.util.List;
 
 import com.google.firebase.database.*;
+
+import model.model.datasource.Firebase_DBManager;
 import model.model.entities.Driver;
 import model.model.entities.Ride;
 
@@ -25,6 +27,9 @@ public interface Backend {
 
     void updateRide(final Ride toUpdate, final Action action);
 
+    void notifyToRideList(final NotifyDataChange<List<Ride>> notifyDataChange);
+
+
     public interface Action<T> {
         void onSuccess();
 
@@ -32,4 +37,11 @@ public interface Backend {
 
         void onProgress(String status, double percent);
     }
+
+    public interface NotifyDataChange<T> {
+        void OnDataChanged(T obj);
+
+        void onFailure(Exception exception);
+    }
+
 }

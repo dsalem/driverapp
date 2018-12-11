@@ -1,5 +1,6 @@
 package com.pickapp.driverapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -22,6 +23,7 @@ public class DriverActivity extends AppCompatActivity
         setContentView(R.layout.activity_driver);
 
         // SIGN UP TO NOTIFICATIONS
+        startService(new Intent(this,NotificationService.class));
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
