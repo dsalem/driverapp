@@ -25,8 +25,6 @@ public class NotificationService extends Service {
 
     Backend backend = BackendFactory.getInstance();
 
-    NotificationManager notificationManager;
-
     // @TargetApi(Build.VERSION_CODES.O)
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
@@ -35,7 +33,7 @@ public class NotificationService extends Service {
 
         // checks if the phone supports this version for foreground notifications
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startInForeground();
+            startChannelForeground();
         } else {
             Notification.Builder nBuilder = new Notification.Builder(getBaseContext());
              nBuilder.setSmallIcon(R.drawable.ic_launcher_background);
@@ -43,12 +41,11 @@ public class NotificationService extends Service {
             nBuilder.setContentText("you have got a new ride waiting for you!");
             Notification notification = nBuilder.build();
             startForeground(1234, notification);
-
         }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void startInForeground() {
+    private void startChannelForeground() {
         String NOTIFICATION_CHANNEL_ID = "DriverApplication";
         String channelName = "DriverService";
 
@@ -62,7 +59,7 @@ public class NotificationService extends Service {
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
         Notification notification = notificationBuilder.setOngoing(true)
                 .setSmallIcon(R.drawable.ic_launcher_background)
-                .setContentTitle("DriverApp is running in background")
+                .setContentTitle("DriverApp is looking for new rides")
                 .setPriority(NotificationManager.IMPORTANCE_HIGH)
                 .setCategory(Notification.CATEGORY_SERVICE)
                 .build();
@@ -75,8 +72,7 @@ public class NotificationService extends Service {
 
             @Override
             public void OnDataChanged(List<Ride> ride) {
-                Toast.makeText(getBaseContext(), ride.size() + "People waiting for pickup", Toast.LENGTH_LONG).show();
-
+                Toast.makeText(getBaseContext(), ride.size() + " People waiting for pickup", Toast.LENGTH_LONG).show();
             }
 
             @Override
