@@ -205,14 +205,13 @@ public class Firebase_DBManager implements Backend {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     Driver currentDriver = dataSnapshot.getChildren().iterator().next().getValue(Driver.class);
-                    if (!currentDriver.getPassword().equals(dPassword)) {
+                    if (currentDriver.getPassword().equals(dPassword)) {
                         action.onSuccess();
                     } else {
                         action.onFailure(new Exception("Wrong password!"));
                     }
-                } else {
-                    action.onFailure(new Exception("This email and/or password are not registered in the system"));
-                }
+                } else
+                    action.onFailure(new Exception("This email is not registered in the system"));
             }
 
             @Override
