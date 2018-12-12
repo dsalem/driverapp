@@ -438,6 +438,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 public void onFailure(Exception e) {
                     Toast.makeText(getBaseContext(),  e.getMessage(), Toast.LENGTH_LONG).show();
                    // Toast.makeText(getApplicationContext(), "You are not in the system you need to register.", Toast.LENGTH_SHORT).show();
+                    resetView();
                     mEmailSignInButton.setEnabled(true);
                 }
 
