@@ -22,6 +22,8 @@ public class Ride {
         this.passengerEmail = passengerEmail;
     }
 
+    public Ride(){}
+
     public String getStartLocation() {
         return startLocation;
     }

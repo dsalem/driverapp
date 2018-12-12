@@ -321,8 +321,8 @@ public class Firebase_DBManager implements Backend {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     Ride Ride = dataSnapshot.getValue(Ride.class);
-                    String phone = dataSnapshot.getKey();
-                    Ride.setPassengerPhoneNumber(Long.parseLong(phone));
+                    //String phone = dataSnapshot.getKey();
+                   //Ride.setPassengerPhoneNumber(Long.parseLong(phone));
                     RideList.add(Ride);
 
 

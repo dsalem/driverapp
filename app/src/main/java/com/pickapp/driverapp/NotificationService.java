@@ -2,14 +2,17 @@ package com.pickapp.driverapp;
 
 import android.annotation.TargetApi;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
 import java.util.List;
@@ -35,19 +38,35 @@ public class NotificationService extends Service {
             startInForeground();
         } else {
             Notification.Builder nBuilder = new Notification.Builder(getBaseContext());
-            // nBuilder.setSmallIcon(R.drawable.services);
+             nBuilder.setSmallIcon(R.drawable.ic_launcher_background);
             nBuilder.setContentTitle("New Ride");
             nBuilder.setContentText("you have got a new ride waiting for you!");
             Notification notification = nBuilder.build();
-            Object obj = getSystemService(Context.NOTIFICATION_SERVICE);
-            NotificationManager notificationManager = (NotificationManager) obj;
-            notificationManager.notify(1234, nBuilder.build());
+            startForeground(1234, notification);
+
         }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void startInForeground() {
+        String NOTIFICATION_CHANNEL_ID = "DriverApplication";
+        String channelName = "DriverService";
 
+        NotificationChannel chan = new NotificationChannel(NOTIFICATION_CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_NONE);
+        chan.setLightColor(Color.WHITE);
+        chan.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        assert manager != null;
+        manager.createNotificationChannel(chan);
+
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
+        Notification notification = notificationBuilder.setOngoing(true)
+                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setContentTitle("DriverApp is running in background")
+                .setPriority(NotificationManager.IMPORTANCE_HIGH)
+                .setCategory(Notification.CATEGORY_SERVICE)
+                .build();
+        startForeground(1234, notification);
     }
 
     @Override
@@ -71,7 +90,7 @@ public class NotificationService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-
+    // stopNoticfication
     }
 
     @Nullable
