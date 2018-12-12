@@ -211,7 +211,7 @@ public class Firebase_DBManager implements Backend {
                         action.onFailure(new Exception("Wrong password!"));
                     }
                 } else
-                    action.onFailure(new Exception("This email and/or password are not registered in the system"));
+                    action.onFailure(new Exception("This email is not registered in the system"));
             }
 
             @Override

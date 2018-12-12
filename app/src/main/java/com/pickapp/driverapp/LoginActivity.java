@@ -420,6 +420,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             String et_email = mEmailView.getText().toString();
             String et_password = mPasswordView.getText().toString();
 
+            // Save info in the shared preference
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString(Email, et_email);
+            editor.putString(Password, et_password);
+            editor.commit();
 
             // checks if user and id exist in firebase
             backend.isDriversPasswordCorrect(et_email,et_password, new Backend.Action() {
@@ -447,30 +452,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 }
             });
 
-            // Save info in the shared prefrences
-
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString(Email, et_email);
-            editor.putString(Password, et_password);
-            editor.commit();
-            finish();
-
         } catch (Exception e) {
             Toast.makeText(getBaseContext(), "Error ", Toast.LENGTH_LONG).show();
         }
-
-        checkFieldsInput();
-
-        // here we will authenticate the user in our data base
-
-        // David good luck!!!!
-
-        // this can be used for onFailure()
-       /*  {
-            Toast.makeText(getApplicationContext(), "You are not in the system you need to register.", Toast.LENGTH_SHORT).show();
-            resetView();
-        }*/
-
     }
 
     private void resetView() {
