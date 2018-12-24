@@ -24,7 +24,7 @@ public interface Backend {
     // Rider methods
     void addRide(final Ride Ride, final Action action);
 
-    void removeRide(long phone, final Action action);
+    void removeRide(String phone, final Action action);
 
     void updateRide(final Ride toUpdate, final Action action);
 
