@@ -13,14 +13,28 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import adapters.RidesAdapter;
+import model.model.entities.Ride;
 
 public class DriverActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private List<Ride> rideList = new ArrayList();
+private RidesAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver);
+
+        // listView
+      ListView myListView = (ListView) findViewById(R.id.ride_list_view);
+        adapter = new RidesAdapter(this,rideList);
+        myListView.setAdapter(adapter);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
