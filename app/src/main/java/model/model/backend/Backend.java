@@ -28,6 +28,8 @@ public interface Backend {
 
     void updateRide(final Ride toUpdate, final Action action);
 
+    List<Ride> getRideList();
+
     void notifyToRideList(final NotifyDataChange<List<Ride>> notifyDataChange);
 
 

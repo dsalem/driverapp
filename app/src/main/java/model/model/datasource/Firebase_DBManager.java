@@ -14,6 +14,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import model.model.backend.Backend;
 import model.model.entities.Driver;
@@ -23,6 +24,34 @@ import static com.pickapp.driverapp.LoginActivity.Password;
 
 public class Firebase_DBManager implements Backend {
 
+    Firebase_DBManager() {
+
+        this.notifyToDriverList(new NotifyDataChange<List<Driver>>() {
+            @Override
+            public void OnDataChanged(List<Driver> obj) {
+                if (DriverList != obj) {
+                    DriverList = obj;
+                }
+            }
+
+            @Override
+            public void onFailure(Exception exception) {
+            }
+        });
+
+        this.notifyToRideList(new NotifyDataChange<List<Ride>>() {
+            @Override
+            public void OnDataChanged(List<Ride> obj) {
+                if (RideList != obj) {
+                    RideList = obj;
+                }
+            }
+
+            @Override
+            public void onFailure(Exception exception) {
+            }
+        });
+    }
 
     static DatabaseReference DriversRef;
     static List<Driver> DriverList;
@@ -254,7 +283,7 @@ public class Firebase_DBManager implements Backend {
 
     public void removeRide(String phone, final Action action) {
 
-        final String key =  phone.toString();
+        final String key = phone.toString();
 
         RidesRef.child(key).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -305,6 +334,10 @@ public class Firebase_DBManager implements Backend {
         });
     }
 
+    public List<Ride> getRideList() {
+        return RideList;
+    }
+
     private static ChildEventListener RideRefChildEventListener;
 
     public void notifyToRideList(final NotifyDataChange<List<Ride>> notifyDataChange) {
@@ -321,9 +354,8 @@ public class Firebase_DBManager implements Backend {
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     Ride Ride = dataSnapshot.getValue(Ride.class);
                     //String phone = dataSnapshot.getKey();
-                   //Ride.setPassengerPhoneNumber(Long.parseLong(phone));
+                    //Ride.setPassengerPhoneNumber(Long.parseLong(phone));
                     RideList.add(Ride);
-
 
                     notifyDataChange.OnDataChanged(RideList);
                 }
@@ -331,7 +363,7 @@ public class Firebase_DBManager implements Backend {
                 @Override
                 public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                     Ride Ride = dataSnapshot.getValue(Ride.class);
-                   String phone = dataSnapshot.getKey();
+                    String phone = dataSnapshot.getKey();
                     Ride.setPhone(phone);
                     for (int i = 0; i < RideList.size(); i++) {
                         if (RideList.get(i).getPhone().equals(phone)) {
@@ -345,7 +377,7 @@ public class Firebase_DBManager implements Backend {
                 @Override
                 public void onChildRemoved(DataSnapshot dataSnapshot) {
                     Ride Ride = dataSnapshot.getValue(Ride.class);
-                    String phone =dataSnapshot.getKey();
+                    String phone = dataSnapshot.getKey();
                     Ride.setPhone(phone);
 
                     for (int i = 0; i < RideList.size(); i++) {

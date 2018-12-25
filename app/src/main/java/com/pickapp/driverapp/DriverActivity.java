@@ -13,14 +13,38 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import adapters.RidesAdapter;
+import model.model.backend.Backend;
+import model.model.datasource.BackendFactory;
+import model.model.entities.Ride;
 
 public class DriverActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private RidesAdapter adapter;
+    private Backend backend;
+    private List<Ride> rideList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver);
+
+        findViews();
+
+        // SIGN UP TO NOTIFICATIONS
+        startService(new Intent(this, NotificationService.class));
+    }
+
+    private void findViews() {
+
+        backend = BackendFactory.getInstance();
+        rideList = backend.getRideList();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -43,8 +67,11 @@ public class DriverActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        // SIGN UP TO NOTIFICATIONS
-        startService(new Intent(this,NotificationService.class));
+        // listView
+        ListView myListView = (ListView) findViewById(R.id.ride_list_view);
+        adapter = new RidesAdapter(this, rideList);
+        myListView.setAdapter(adapter);
+        registerForContextMenu(myListView);
     }
 
     @Override
