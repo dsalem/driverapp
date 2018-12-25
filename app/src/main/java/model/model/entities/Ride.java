@@ -45,6 +45,8 @@ public class Ride {
         driverName = null;
     }
 
+    public Ride(){}
+
     public static double calcDistanceToDestination()
     {
         // ToDo use google api to calculate distance between location of client and his distnation

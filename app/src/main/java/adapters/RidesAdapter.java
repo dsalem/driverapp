@@ -1,6 +1,9 @@
 package adapters;
 
 import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +15,10 @@ import android.widget.TextView;
 
 import com.pickapp.driverapp.R;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import model.model.entities.Ride;
 
@@ -29,10 +34,7 @@ public class RidesAdapter extends ArrayAdapter<Ride> implements Filterable {
         this.context = context;
         this.origRideList = resource;
         this.ridesList = resource;
-
-
     }
-
 
     public int getCount() {
         return ridesList.size();
@@ -70,10 +72,9 @@ public class RidesAdapter extends ArrayAdapter<Ride> implements Filterable {
             holder = (RideHolder) v.getTag();
 
         Ride p = ridesList.get(position);
-        holder.rideLocationView.setText(p.getName());
+        // ToDo filter the location to smaller format using getPlace from ap1
+        holder.rideLocationView.setText(p.getLocation());
         holder.distView.setText("" + p.calcDistanceToDestination());
-
-
         return v;
     }
 
@@ -98,12 +99,12 @@ public class RidesAdapter extends ArrayAdapter<Ride> implements Filterable {
     @Override
     public Filter getFilter() {
         if (myRideFilter == null)
-            myRideFilter = new PlanetFilter();
+            myRideFilter = new RideFilter();
 
         return myRideFilter;
     }
 
-    private class PlanetFilter extends Filter {
+    private class RideFilter extends Filter {
 
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {

@@ -6,8 +6,10 @@
         android:id="@+id/location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="left"
-        android:textStyle="bold" />
+        android:gravity="right"
+        android:paddingLeft="4dp"
+        android:textSize="26dp"
+        android:textStyle="bold|italic" />
 
     <TextView
         android:id="@+id/dist"
@@ -17,7 +19,8 @@
         android:layout_marginTop="2dip"
         android:layout_toRightOf="@id/location"
         android:layout_toEndOf="@id/location"
-        android:gravity="right"
-        android:textSize="8dp"
-        android:textStyle="italic" />
+        android:paddingRight="4dp"
+        android:gravity="left"
+        android:textSize="26dp"
+        android:textStyle="bold|italic" />
 </android.support.constraint.ConstraintLayout>
