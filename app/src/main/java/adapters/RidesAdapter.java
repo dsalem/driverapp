@@ -75,8 +75,9 @@ public class RidesAdapter extends ArrayAdapter<Ride> implements Filterable {
 
         Ride p = ridesList.get(position);
         // ToDo filter the location to smaller format using getPlace from ap1
-        holder.rideLocationView.setText(p.getLocation().trim());
-        holder.distView.setText("" + calcDistanceToDestination(p));
+
+        holder.rideLocationView.setText(p.getLocation().replaceAll(",","\n"));
+        holder.distView.setText(" " + calcDistanceToDestination(p));
         return v;
     }
 
@@ -200,7 +201,7 @@ public class RidesAdapter extends ArrayAdapter<Ride> implements Filterable {
         locationB.setLongitude(endLongitude);
 
         double distance = locationA.distanceTo(locationB);
-        return distance;
-        //return 0.52;
+       // return distance;
+        return 0.52;
     }
 }
