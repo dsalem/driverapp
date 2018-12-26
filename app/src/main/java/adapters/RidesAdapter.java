@@ -75,7 +75,7 @@ public class RidesAdapter extends ArrayAdapter<Ride> implements Filterable {
 
         Ride p = ridesList.get(position);
         // ToDo filter the location to smaller format using getPlace from ap1
-        holder.rideLocationView.setText(p.getLocation());
+        holder.rideLocationView.setText(p.getLocation().trim());
         holder.distView.setText("" + calcDistanceToDestination(p));
         return v;
     }
@@ -146,6 +146,7 @@ public class RidesAdapter extends ArrayAdapter<Ride> implements Filterable {
             }
         }
     }
+
     public LatLng getLocationFromAddress(Context context, String inputtedAddress) {
 
         Geocoder coder = new Geocoder(context);
@@ -178,10 +179,8 @@ public class RidesAdapter extends ArrayAdapter<Ride> implements Filterable {
         return resLatLng;
     }
 
-
     public double calcDistanceToDestination(Ride ride)
     {
-
         String startLocation = ride.getLocation();
         LatLng latLngLocation = getLocationFromAddress(context,startLocation);
         double startLatitude =latLngLocation.latitude;
@@ -201,7 +200,7 @@ public class RidesAdapter extends ArrayAdapter<Ride> implements Filterable {
         locationB.setLongitude(endLongitude);
 
         double distance = locationA.distanceTo(locationB);
-       // return distance;
-        return 0.52;
+        return distance;
+        //return 0.52;
     }
 }
