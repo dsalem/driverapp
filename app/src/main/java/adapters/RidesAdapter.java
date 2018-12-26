@@ -12,7 +12,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.pickapp.driverapp.R;
 
 import java.io.IOException;
@@ -74,7 +76,7 @@ public class RidesAdapter extends ArrayAdapter<Ride> implements Filterable {
         Ride p = ridesList.get(position);
         // ToDo filter the location to smaller format using getPlace from ap1
         holder.rideLocationView.setText(p.getLocation());
-        holder.distView.setText("" + p.calcDistanceToDestination());
+        holder.distView.setText("" + calcDistanceToDestination(p));
         return v;
     }
 
@@ -143,5 +145,63 @@ public class RidesAdapter extends ArrayAdapter<Ride> implements Filterable {
                 notifyDataSetChanged();
             }
         }
+    }
+    public LatLng getLocationFromAddress(Context context, String inputtedAddress) {
+
+        Geocoder coder = new Geocoder(context);
+        List<Address> address;
+        LatLng resLatLng = null;
+
+        try {
+            // May throw an IOException
+            address = coder.getFromLocationName(inputtedAddress, 5);
+            if (address == null) {
+                return null;
+            }
+
+            if (address.size() == 0) {
+                return null;
+            }
+
+            Address location = address.get(0);
+            location.getLatitude();
+            location.getLongitude();
+
+            resLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+
+        } catch (IOException ex) {
+
+            ex.printStackTrace();
+            Toast.makeText(context, ex.getMessage(), Toast.LENGTH_LONG).show();
+        }
+
+        return resLatLng;
+    }
+
+
+    public double calcDistanceToDestination(Ride ride)
+    {
+
+        String startLocation = ride.getLocation();
+        LatLng latLngLocation = getLocationFromAddress(context,startLocation);
+        double startLatitude =latLngLocation.latitude;
+        double startLongitude =latLngLocation.latitude;
+
+        String destination = ride.getDestination();
+        LatLng latLngDestination = getLocationFromAddress(context,destination);
+        double endLatitude =latLngDestination.latitude;
+        double endLongitude =latLngDestination.longitude;
+
+        Location locationA= new Location("point A");
+        locationA.setLatitude(startLatitude);
+        locationA.setLongitude(startLongitude);
+
+        Location locationB = new Location("point B");
+        locationB.setLatitude(endLatitude);
+        locationB.setLongitude(endLongitude);
+
+        double distance = locationA.distanceTo(locationB);
+       // return distance;
+        return 0.52;
     }
 }
