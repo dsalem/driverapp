@@ -1,5 +1,8 @@
 package com.pickapp.driverapp;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -26,10 +29,6 @@ import model.model.entities.Ride;
 public class DriverActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private RidesAdapter adapter;
-    private Backend backend;
-    private List<Ride> rideList;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,24 +38,22 @@ public class DriverActivity extends AppCompatActivity
 
         // SIGN UP TO NOTIFICATIONS
         startService(new Intent(this, NotificationService.class));
+
+        createFragment(new OpenRidesFragment());
+    }
+
+    private void createFragment(Fragment fragment) {
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        fragmentTransaction.replace(R.id.frameLayout, fragment);
+        fragmentTransaction.commit();
     }
 
     private void findViews() {
 
-        backend = BackendFactory.getInstance();
-        rideList = backend.getRideList();
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -67,11 +64,6 @@ public class DriverActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        // listView
-        ListView myListView = (ListView) findViewById(R.id.ride_list_view);
-        adapter = new RidesAdapter(this, rideList);
-        myListView.setAdapter(adapter);
-        registerForContextMenu(myListView);
     }
 
     @Override

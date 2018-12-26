@@ -60,13 +60,10 @@ public class RidesAdapter extends ArrayAdapter<Ride> implements Filterable {
             // This a new view we inflate the new layout
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             v = inflater.inflate(R.layout.location_row_layout, null);
+
             // Now we can fill the layout with the right values
-            TextView location = (TextView) v.findViewById(R.id.location);
-            TextView distView = (TextView) v.findViewById(R.id.dist);
-
-
-            holder.rideLocationView = location;
-            holder.distView = distView;
+            holder.rideLocationView = (TextView) v.findViewById(R.id.waiting_at);
+            holder.rideLengthView = (TextView) v.findViewById(R.id.ride_length);
 
             v.setTag(holder);
         }
@@ -74,10 +71,10 @@ public class RidesAdapter extends ArrayAdapter<Ride> implements Filterable {
             holder = (RideHolder) v.getTag();
 
         Ride p = ridesList.get(position);
-        // ToDo filter the location to smaller format using getPlace from ap1
+        // ToDo convert the location to smaller format using getPlace from ap1
 
         holder.rideLocationView.setText(p.getLocation().replaceAll(",","\n"));
-        holder.distView.setText(" " + calcDistanceToDestination(p));
+        holder.rideLengthView.setText(" " + calcDistanceToDestination(p));
         return v;
     }
 
@@ -92,7 +89,7 @@ public class RidesAdapter extends ArrayAdapter<Ride> implements Filterable {
 
     private static class RideHolder {
         public TextView rideLocationView;
-        public TextView distView;
+        public TextView rideLengthView;
     }
 
     /*
@@ -182,7 +179,7 @@ public class RidesAdapter extends ArrayAdapter<Ride> implements Filterable {
 
     public double calcDistanceToDestination(Ride ride)
     {
-        String startLocation = ride.getLocation();
+      /*  String startLocation = ride.getLocation();
         LatLng latLngLocation = getLocationFromAddress(context,startLocation);
         double startLatitude =latLngLocation.latitude;
         double startLongitude =latLngLocation.latitude;
@@ -200,7 +197,7 @@ public class RidesAdapter extends ArrayAdapter<Ride> implements Filterable {
         locationB.setLatitude(endLatitude);
         locationB.setLongitude(endLongitude);
 
-        double distance = locationA.distanceTo(locationB);
+        double distance = locationA.distanceTo(locationB);*/
        // return distance;
         return 0.52;
     }

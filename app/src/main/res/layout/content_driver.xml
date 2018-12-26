@@ -8,10 +8,10 @@
     tools:context=".DriverActivity"
     tools:showIn="@layout/app_bar_driver">
 
-    <ListView
-        android:id="@+id/ride_list_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </ListView>
+    <FrameLayout
+        android:id="@+id/frameLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    </FrameLayout>
 
 </android.support.constraint.ConstraintLayout>
