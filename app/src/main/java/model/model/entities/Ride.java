@@ -1,7 +1,13 @@
 package model.model.entities;
 
+import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+
 import java.sql.Time;
 import java.util.Date;
+import java.util.List;
 
 /**
  * a ride class allows a new user of the app to request a ride via database
@@ -46,12 +52,6 @@ public class Ride {
     }
 
     public Ride(){}
-
-    public static double calcDistanceToDestination()
-    {
-        // ToDo use google api to calculate distance between location of client and his distnation
-        return 0.52;
-    }
 
     // *********** getters & setters ************
 
