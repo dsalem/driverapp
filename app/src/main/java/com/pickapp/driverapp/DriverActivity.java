@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -40,6 +41,11 @@ public class DriverActivity extends AppCompatActivity
         startService(new Intent(this, NotificationService.class));
 
         createFragment(new OpenRidesFragment());
+
+        /*registerReceiver(
+                new MyBroadcastReceiver(),
+                new IntentFilter(Intent.ACTION_TIME_TICK));// to change as needed
+*/
     }
 
     private void createFragment(Fragment fragment) {
