@@ -15,7 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-       
+
         <activity
 
             android:name=".LoginActivity"
@@ -37,6 +37,12 @@
         </activity>
         <service android:name=".NotificationService"
             android:description="@string/service_description" />
+
+        <receiver android:name=".MyBroadcastReceiver">
+            <intent-filter>
+                <action android:name="MyBrodcastReceiver" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

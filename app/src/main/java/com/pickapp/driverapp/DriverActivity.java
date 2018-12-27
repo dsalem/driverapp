@@ -3,6 +3,7 @@ package com.pickapp.driverapp;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -19,6 +20,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
+import com.google.firebase.components.Component;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +33,8 @@ import model.model.entities.Ride;
 public class DriverActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    static ComponentName service = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,14 +43,17 @@ public class DriverActivity extends AppCompatActivity
         findViews();
 
         // SIGN UP TO NOTIFICATIONS
-        startService(new Intent(this, NotificationService.class));
+        if(service == null) {
+           service = startService(new Intent(this, NotificationService.class));
+        }
 
-        createFragment(new OpenRidesFragment());
-
-        /*registerReceiver(
+        registerReceiver(
                 new MyBroadcastReceiver(),
                 new IntentFilter(Intent.ACTION_TIME_TICK));// to change as needed
-*/
+        createFragment(new OpenRidesFragment());
+
+
+
     }
 
     private void createFragment(Fragment fragment) {

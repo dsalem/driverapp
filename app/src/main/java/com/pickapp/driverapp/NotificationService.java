@@ -24,7 +24,7 @@ import model.model.entities.Ride;
 public class NotificationService extends Service {
 
     Backend backend = BackendFactory.getInstance();
-
+/*
     // @TargetApi(Build.VERSION_CODES.O)
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
@@ -36,9 +36,9 @@ public class NotificationService extends Service {
             startChannelForeground();
         } else {
             Notification.Builder nBuilder = new Notification.Builder(getBaseContext());
-             nBuilder.setSmallIcon(R.drawable.ic_launcher_background);
-            nBuilder.setContentTitle("New Ride");
-            nBuilder.setContentText("you have got a new ride waiting for you!");
+             nBuilder.setSmallIcon(R.drawable.ic_directions_car_blue);
+            nBuilder.setContentTitle("Driver app");
+            nBuilder.setContentText("you will get notice on new rides!");
             Notification notification = nBuilder.build();
             startForeground(1234, notification);
         }
@@ -58,21 +58,27 @@ public class NotificationService extends Service {
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
         Notification notification = notificationBuilder.setOngoing(true)
-                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setSmallIcon(R.drawable.ic_directions_car_blue)
                 .setContentTitle("DriverApp is looking for new rides")
                 .setPriority(NotificationManager.IMPORTANCE_HIGH)
                 .setCategory(Notification.CATEGORY_SERVICE)
                 .build();
         startForeground(1234, notification);
     }
-
+*/
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         backend.notifyToRideList(new Backend.NotifyDataChange<List<Ride>>() {
 
             @Override
             public void OnDataChanged(List<Ride> ride) {
-                Toast.makeText(getBaseContext(), ride.size() + " People waiting for pickup", Toast.LENGTH_LONG).show();
+              try{
+                Intent intent = new Intent(getApplicationContext(),MyBroadcastReceiver.class);
+                sendBroadcast(intent);
+              } catch (Exception e){
+                  e.printStackTrace();
+              }
+              //  Toast.makeText(getBaseContext(), ride.size() + " People waiting for pickup", Toast.LENGTH_LONG).show();
             }
 
             @Override
