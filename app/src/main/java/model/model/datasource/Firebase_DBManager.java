@@ -1,6 +1,7 @@
 package model.model.datasource;
 
 import android.support.annotation.NonNull;
+import android.widget.LinearLayout;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -251,6 +252,7 @@ public class Firebase_DBManager implements Backend {
 
     }
 
+    public List<Driver> getDriverList(){return DriverList;}
 // *********************  Rider methods for database *******************88
 
     static DatabaseReference RidesRef;

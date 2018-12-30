@@ -173,8 +173,8 @@ public class LoginActivity extends AppCompatActivity {
     public void signIn() {
         try {
             mEmailSignInButton.setEnabled(false);
-            String et_email = mEmailView.getText().toString();
-            String et_password = mPasswordView.getText().toString();
+            final String et_email = mEmailView.getText().toString();
+            final String et_password = mPasswordView.getText().toString();
 
             // Save info in the shared preference
             SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -190,6 +190,8 @@ public class LoginActivity extends AppCompatActivity {
                     try {
                         mEmailSignInButton.setEnabled(true);
                         Intent intent = new Intent(LoginActivity.this, DriverActivity.class);
+                        intent.putExtra("email",et_email);
+                        intent.putExtra("password",et_password);
                         startActivity(intent);
                     } catch (Exception e) {
                         e.printStackTrace();

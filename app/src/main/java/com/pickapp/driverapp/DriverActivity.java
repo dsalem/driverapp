@@ -34,6 +34,7 @@ public class DriverActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     static ComponentName service = null;
+    Bundle bundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,20 +44,18 @@ public class DriverActivity extends AppCompatActivity
         findViews();
 
         // SIGN UP TO NOTIFICATIONS
-        if(service == null) {
-           service = startService(new Intent(this, NotificationService.class));
+        if (service == null) {
+            service = startService(new Intent(this, NotificationService.class));
         }
 
         registerReceiver(
                 new MyBroadcastReceiver(),
                 new IntentFilter(Intent.ACTION_TIME_TICK));// to change as needed
-        //createFragment(new OpenRidesFragment());
-
-
-
+       createFragment(new OpenRidesFragment());
     }
 
     private void createFragment(Fragment fragment) {
+        fragment.setArguments(bundle);
         FragmentManager fm = getFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         fragmentTransaction.replace(R.id.frameLayout, fragment);
@@ -68,6 +67,10 @@ public class DriverActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        bundle = new Bundle();
+        Intent intent = getIntent();
+        bundle.putString("email", intent.getStringExtra("email"));
+        bundle.putString("password", intent.getStringExtra("password"));
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -77,7 +80,6 @@ public class DriverActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
     }
 
     @Override
@@ -117,15 +119,16 @@ public class DriverActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        FragmentManager fragmentManager = getFragmentManager();
 
         if (id == R.id.nav_find_ride) {
             createFragment(new OpenRidesFragment());
         } else if (id == R.id.nav_view_history) {
-            createFragment(new DriverHistoryFragment());
+           createFragment(new DriverHistoryFragment());
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_log_out) {
-
+            finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

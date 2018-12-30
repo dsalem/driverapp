@@ -21,6 +21,8 @@ public interface Backend {
 
     void isDriversPasswordCorrect(String dEmail ,String dPassword, final Action action);
 
+    List<Driver> getDriverList();
+
     // Rider methods
     void addRide(final Ride Ride, final Action action);
 
