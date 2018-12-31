@@ -21,6 +21,7 @@ public class Ride {
     private String name;
     private String destination;
     private String location;
+    private String lengthOfRide;
     private String phone;
     private String email;
     private ClientRequestStatus status;
@@ -97,6 +98,14 @@ public class Ride {
      */
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getLengthOfRide() {
+        return lengthOfRide;
+    }
+
+    public void setLengthOfRide(String lengthOfRide) {
+        this.lengthOfRide = lengthOfRide;
     }
 
     /**

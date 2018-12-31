@@ -24,7 +24,6 @@ public class DriverHistoryFragment extends Fragment {
     private List<Ride> driversRideList;
     private DriverHistoryAdapter adapter;
     private Backend backend;
-    private Spinner filter;
 
     @Nullable
     @Override
