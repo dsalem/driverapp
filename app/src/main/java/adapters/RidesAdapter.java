@@ -42,7 +42,7 @@ public class RidesAdapter extends ArrayAdapter<Ride> implements Filterable {
         super(context, R.layout.location_row_layout, resource);
         this.context = context;
         this.origRideList = resource;
-        this.ridesList = resource;
+        this.ridesList =  resource;
     }
 
     public int getCount() {
@@ -115,26 +115,27 @@ public class RidesAdapter extends ArrayAdapter<Ride> implements Filterable {
 
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
-            // ToDo actual work needed here....
             FilterResults results = new FilterResults();
+            List<Ride> nRideList = new ArrayList<Ride>();
+
+            for (Ride p : ridesList) {
+                if (p.getStatus().equals(Ride.ClientRequestStatus.WAITING))
+                    nRideList.add(p);
+            }
             // We implement here the filter logic
-            if (constraint == null || constraint.length() == 0) {
+            if (constraint == null || constraint.length() == 0 || constraint.equals("all")) {
                 // No filter implemented we return all the list
-                results.values = origRideList;
-                results.count = origRideList.size();
+
             } else {
                 // We perform filtering operation
-                List<Ride> nPlanetList = new ArrayList<Ride>();
-
                 for (Ride p : ridesList) {
-                    if (p.getName().toUpperCase().startsWith(constraint.toString().toUpperCase()))
-                        nPlanetList.add(p);
+                    // ToDo calc distance from driver and filter
+                   //if (p.getLengthOfRide() <= Float.valueOf( constraint.toString()))
+                      //  nRideList.add(p);
                 }
-
-                results.values = nPlanetList;
-                results.count = nPlanetList.size();
-
             }
+            results.values = nRideList;
+            results.count = nRideList.size();
             return results;
         }
 

@@ -65,10 +65,23 @@ public class OpenRidesFragment extends Fragment {
         findViews(view);
         setLiteners();
 
-        // intializing spinner
+        // initializing spinner
         String[] items = new String[]{"all", "500", "250", "100", "50"};
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_spinner_dropdown_item, items);
         filter.setAdapter(arrayAdapter);
+        filter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                CharSequence sequence = (CharSequence) filter.getItemAtPosition(position);
+                adapter.getFilter().filter(sequence);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                return;
+            }
+        });
+
 
         myListView.setAdapter(adapter);
         registerForContextMenu(myListView);

@@ -25,6 +25,7 @@ public class Ride {
     private String phone;
     private String email;
     private ClientRequestStatus status;
+    private String rideId;
 
     private Date startTime;
     private Date finishTime;
@@ -144,6 +145,14 @@ public class Ride {
      */
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getRideId() {
+        return rideId;
+    }
+
+    public void setRideId(String rideId) {
+        this.rideId = rideId;
     }
 
     public ClientRequestStatus getStatus() {

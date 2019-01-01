@@ -283,18 +283,15 @@ public class Firebase_DBManager implements Backend {
         });
     }
 
-    public void removeRide(String phone, final Action action) {
-
-        final String key = phone.toString();
-
-        RidesRef.child(key).addListenerForSingleValueEvent(new ValueEventListener() {
+    public void removeRide(final String id, final Action action) {
+        RidesRef.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 final Ride value = dataSnapshot.getValue(Ride.class);
                 if (value == null)
                     action.onFailure(new Exception("Ride not found ..."));
                 else {
-                    RidesRef.child(key).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    RidesRef.child(id).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
                             action.onSuccess();
@@ -316,9 +313,8 @@ public class Firebase_DBManager implements Backend {
     }
 
     public void updateRide(final Ride toUpdate, final Action action) {
-        //final String key = ((Long) toUpdate.getPhone()).toString();
 
-        removeRide(toUpdate.getPhone(), new Action() {
+        removeRide(toUpdate.getRideId(), new Action() {
             @Override
             public void onSuccess() {
                 addRide(toUpdate, action);
@@ -354,10 +350,9 @@ public class Firebase_DBManager implements Backend {
             RideRefChildEventListener = new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    Ride Ride = dataSnapshot.getValue(Ride.class);
-                    //String phone = dataSnapshot.getKey();
-                    //Ride.setPassengerPhoneNumber(Long.parseLong(phone));
-                    RideList.add(Ride);
+                    Ride ride = dataSnapshot.getValue(Ride.class);
+                    ride.setRideId(dataSnapshot.getKey());
+                    RideList.add(ride);
 
                     notifyDataChange.OnDataChanged(RideList);
                 }
@@ -365,10 +360,9 @@ public class Firebase_DBManager implements Backend {
                 @Override
                 public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                     Ride Ride = dataSnapshot.getValue(Ride.class);
-                    String phone = dataSnapshot.getKey();
-                    Ride.setPhone(phone);
+
                     for (int i = 0; i < RideList.size(); i++) {
-                        if (RideList.get(i).getPhone().equals(phone)) {
+                        if (RideList.get(i).getRideId().equals(s)) {
                             RideList.set(i, Ride);
                             break;
                         }
@@ -378,12 +372,9 @@ public class Firebase_DBManager implements Backend {
 
                 @Override
                 public void onChildRemoved(DataSnapshot dataSnapshot) {
-                    Ride Ride = dataSnapshot.getValue(Ride.class);
-                    String phone = dataSnapshot.getKey();
-                    Ride.setPhone(phone);
-
+                    String id = dataSnapshot.getKey();
                     for (int i = 0; i < RideList.size(); i++) {
-                        if (RideList.get(i).getPhone() == phone) {
+                        if (RideList.get(i).getRideId().equals(id)) {
                             RideList.remove(i);
                             break;
                         }
