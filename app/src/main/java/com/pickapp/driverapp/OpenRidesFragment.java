@@ -1,8 +1,18 @@
 package com.pickapp.driverapp;
 
+import android.Manifest;
 import android.app.Fragment;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.telephony.SmsManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -87,6 +97,8 @@ public class OpenRidesFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ride = (Ride) myListView.getItemAtPosition(position);
                 nameAndDestenation.setText(ride.getName() + " wants to go to " + ride.getDestination());
+                callButton.setText(ride.getPhone());
+
             }
         });
 
@@ -101,6 +113,19 @@ public class OpenRidesFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
+                String smsNumber = ride.getPhone();
+                String smsText = "Hey " + ride.getName() + "I'll be by you in 2 minutes";
+
+                Uri uri = Uri.parse("smsto:" + smsNumber);
+                Intent intent = new Intent(Intent.ACTION_SENDTO, uri);
+                intent.putExtra("sms_body", smsText);
+                startActivity(intent);
+                //if we want to send a text message without opening the text messaging app
+                /*String messageToSend = "Hey" + ride.getName() + "I'll be by you in 2 minutes" ;
+                String number = ride.getPhone();
+
+                SmsManager.getDefault().sendTextMessage(number, null, messageToSend, null,null);
+*/
             }
         });
         pickButton.setOnClickListener(new View.OnClickListener() {

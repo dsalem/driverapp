@@ -60,13 +60,14 @@
                 android:id="@+id/call"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Call" />
+                android:text="Call"
+                android:autoLink="phone"/>
 
             <Button
                 android:id="@+id/send_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="SMS" />
+                android:text="SMS"/>
 
             <Button
                 android:id="@+id/choose_ride"

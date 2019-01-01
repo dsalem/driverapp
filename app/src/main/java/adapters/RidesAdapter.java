@@ -1,9 +1,14 @@
 package adapters;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,8 +37,9 @@ public class RidesAdapter extends ArrayAdapter<Ride> implements Filterable {
     private Filter myRideFilter;
     private List<Ride> origRideList;
 
+
     public RidesAdapter(@NonNull Context context, List<Ride> resource) {
-        super(context,R.layout.location_row_layout, resource);
+        super(context, R.layout.location_row_layout, resource);
         this.context = context;
         this.origRideList = resource;
         this.ridesList = resource;
@@ -67,15 +73,14 @@ public class RidesAdapter extends ArrayAdapter<Ride> implements Filterable {
             holder.rideLengthView = (TextView) v.findViewById(R.id.ride_length);
 
             v.setTag(holder);
-        }
-        else
+        } else
             holder = (RideHolder) v.getTag();
 
         Ride p = ridesList.get(position);
         // ToDo convert the location to smaller format using getPlace from ap1
 
-        holder.rideLocationView.setText(p.getLocation().replaceAll(",","\n"));
-        holder.rideLengthView.setText(Float.toString(p.getLengthOfRide())  + " KM");
+        holder.rideLocationView.setText(p.getLocation().replaceAll(",", "\n"));
+        holder.rideLengthView.setText(Float.toString(p.getLengthOfRide()) + " KM");
         return v;
     }
 
@@ -117,8 +122,7 @@ public class RidesAdapter extends ArrayAdapter<Ride> implements Filterable {
                 // No filter implemented we return all the list
                 results.values = origRideList;
                 results.count = origRideList.size();
-            }
-            else {
+            } else {
                 // We perform filtering operation
                 List<Ride> nPlanetList = new ArrayList<Ride>();
 
@@ -146,6 +150,5 @@ public class RidesAdapter extends ArrayAdapter<Ride> implements Filterable {
             }
         }
     }
-
 
 }
