@@ -292,7 +292,7 @@ public class Firebase_DBManager implements Backend {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 final Ride value = dataSnapshot.getValue(Ride.class);
                 if (value == null)
-                    action.onFailure(new Exception("Ride not find ..."));
+                    action.onFailure(new Exception("Ride not found ..."));
                 else {
                     RidesRef.child(key).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override

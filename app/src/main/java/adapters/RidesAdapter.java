@@ -75,7 +75,7 @@ public class RidesAdapter extends ArrayAdapter<Ride> implements Filterable {
         // ToDo convert the location to smaller format using getPlace from ap1
 
         holder.rideLocationView.setText(p.getLocation().replaceAll(",","\n"));
-        holder.rideLengthView.setText(p.getLengthOfRide());
+        holder.rideLengthView.setText(Float.toString(p.getLengthOfRide())  + " KM");
         return v;
     }
 
@@ -91,6 +91,7 @@ public class RidesAdapter extends ArrayAdapter<Ride> implements Filterable {
     private static class RideHolder {
         public TextView rideLocationView;
         public TextView rideLengthView;
+
     }
 
     /*

@@ -21,7 +21,7 @@ public class Ride {
     private String name;
     private String destination;
     private String location;
-    private String lengthOfRide;
+    private float lengthOfRide;
     private String phone;
     private String email;
     private ClientRequestStatus status;
@@ -35,15 +35,17 @@ public class Ride {
      *
      * @param destination
      * @param loca
+     * @param distance
      * @param phone
      * @param email
      */
-    public Ride(String name, String destination, String loca, String phone, String email) {
+    public Ride(String name, String destination, String loca,float distance, String phone, String email) {
         this.name = name;
         this.destination = destination;
         this.location = loca;
         this.phone = phone;
         this.email = email;
+        this.lengthOfRide = distance;
 
         // default values will only be used by reading from the data base
         status = ClientRequestStatus.WAITING;
@@ -100,11 +102,11 @@ public class Ride {
         this.location = location;
     }
 
-    public String getLengthOfRide() {
+    public float getLengthOfRide() {
         return lengthOfRide;
     }
 
-    public void setLengthOfRide(String lengthOfRide) {
+    public void setLengthOfRide(float lengthOfRide) {
         this.lengthOfRide = lengthOfRide;
     }
 

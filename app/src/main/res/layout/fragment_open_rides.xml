@@ -25,7 +25,7 @@
 
         <ListView
             android:id="@+id/ride_list_view"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
         </ListView>
@@ -43,15 +43,17 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-           <TextView
-               android:layout_width="match_parent"
-               android:layout_height="match_parent"
-               android:id="@+id/name_and_destination"/>
+            <TextView
+                android:id="@+id/name_and_destination"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="left" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="top"
             android:orientation="horizontal">
 
             <Button
@@ -59,21 +61,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Call" />
+
             <Button
                 android:id="@+id/send_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="SMS"/>
+                android:text="SMS" />
+
             <Button
                 android:id="@+id/choose_ride"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="Pickup"/>
+                android:text="Pickup" />
+
             <Button
                 android:id="@+id/ride_completed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Completed"/>
+                android:text="Completed" />
         </LinearLayout>
 
 
