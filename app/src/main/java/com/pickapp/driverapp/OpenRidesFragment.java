@@ -89,7 +89,7 @@ public class OpenRidesFragment extends Fragment {
         });
 
         myListView.setAdapter(adapter);
-        
+
         // sets an empty view if filter returns an empty list
         myListView.setEmptyView(view.findViewById(R.id.empty));
         registerForContextMenu(myListView);
@@ -108,6 +108,11 @@ public class OpenRidesFragment extends Fragment {
         rideCompleteButton = (Button) v.findViewById(R.id.ride_completed);
         nameAndDestenation = (TextView) v.findViewById(R.id.name_and_destination);
 
+        pickButton.setEnabled(false);
+        callButton.setEnabled(false);
+        smsButton.setEnabled(false);
+        rideCompleteButton.setEnabled(false);
+
     }
 
     public void setLiteners() {
@@ -119,14 +124,14 @@ public class OpenRidesFragment extends Fragment {
                 ride = (Ride) myListView.getItemAtPosition(position);
                 nameAndDestenation.setText(ride.getName() + " wants to go to " + ride.getDestination());
                 callButton.setText(ride.getPhone());
-
+                pickButton.setEnabled(true);
             }
         });
 
         callButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                rideCompleteButton.setEnabled(true);
             }
         });
 
@@ -147,6 +152,7 @@ public class OpenRidesFragment extends Fragment {
 
                 SmsManager.getDefault().sendTextMessage(number, null, messageToSend, null,null);
 */
+                rideCompleteButton.setEnabled(true);
             }
         });
         pickButton.setOnClickListener(new View.OnClickListener() {
@@ -171,13 +177,35 @@ public class OpenRidesFragment extends Fragment {
                     public void onProgress(String status, double percent) {
                     }
                 });
+                smsButton.setEnabled(true);
+                callButton.setEnabled(true);
+
+                // just for testing
+                rideCompleteButton.setEnabled(true);
             }
         });
 
         rideCompleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
+                ride.setStatus(Ride.ClientRequestStatus.CLOSED);
+                ride.setStartTime(new Date());
+                backend.updateRide(ride, new Backend.Action() {
+                    @Override
+                    public void onSuccess() {
+                        Toast.makeText(v.getContext(), "Ride complete!", Toast.LENGTH_LONG).show();
 
+                    }
+
+                    @Override
+                    public void onFailure(Exception exception) {
+                        Toast.makeText(v.getContext(), "Error \n" + exception.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onProgress(String status, double percent) {
+                    }
+                });
             }
         });
 

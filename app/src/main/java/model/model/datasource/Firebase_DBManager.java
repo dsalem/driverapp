@@ -266,8 +266,8 @@ public class Firebase_DBManager implements Backend {
     }
 
 
-    public void addRide(final Ride Ride, final Action action) {
-        RidesRef.push().setValue(Ride).addOnSuccessListener(new OnSuccessListener<Void>() {
+    public void addRide(final Ride ride, final Action action) {
+        RidesRef.child(ride.getRideId()).setValue(ride).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 action.onSuccess();

@@ -125,7 +125,6 @@ public class DriverActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        FragmentManager fragmentManager = getFragmentManager();
 
         if (id == R.id.nav_find_ride) {
             createFragment(new OpenRidesFragment());

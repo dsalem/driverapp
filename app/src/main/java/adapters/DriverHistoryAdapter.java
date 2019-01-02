@@ -99,4 +99,37 @@ public class DriverHistoryAdapter extends ArrayAdapter<Ride> {
         public Button addContact;
         public TextView nameOfContact;
     }
+
+    private class RideFilter extends Filter {
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            FilterResults results = new FilterResults();
+            List<Ride> nRideList = new ArrayList<Ride>();
+
+            // We implement here the filter logic
+            if (constraint == null || constraint.length() == 0 ) {
+                // No filter implemented we return all the list
+            } else {
+                // We perform filtering operation
+            }
+
+            results.values = nRideList;
+            results.count = nRideList.size();
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint,
+                                      FilterResults results) {
+            // Now we have to inform the adapter about the new list filtered
+            if (results.count == 0) {
+                ridesList.clear();
+                notifyDataSetInvalidated();
+            } else {
+                ridesList = (List<Ride>) results.values;
+                notifyDataSetChanged();
+            }
+        }
+    }
 }
