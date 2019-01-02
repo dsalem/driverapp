@@ -144,8 +144,8 @@ public class RidesAdapter extends ArrayAdapter<Ride> implements Filterable {
                 // We perform filtering operation
                 List<Ride> temp = new ArrayList<Ride>();
                 for (Ride p : nRideList) {
-                    if (calcDistanceToDestination(location,p.getLocation()) <= Float.valueOf( constraint.toString()))
-                      temp.add(p);
+                    if (calcDistanceToDestination(location, p.getLocation()) <= Float.valueOf(constraint.toString()))
+                        temp.add(p);
 
                 }
                 nRideList = temp;
@@ -160,9 +160,10 @@ public class RidesAdapter extends ArrayAdapter<Ride> implements Filterable {
         protected void publishResults(CharSequence constraint,
                                       FilterResults results) {
             // Now we have to inform the adapter about the new list filtered
-            if (results.count == 0)
+            if (results.count == 0) {
+                ridesList.clear();
                 notifyDataSetInvalidated();
-            else {
+            } else {
                 ridesList = (List<Ride>) results.values;
                 notifyDataSetChanged();
             }
@@ -170,7 +171,7 @@ public class RidesAdapter extends ArrayAdapter<Ride> implements Filterable {
     }
 
     public void initiateLocation() {
-        locationManager = (LocationManager)  context.getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
         // Define a listener that responds to location updates
         locationListener = new LocationListener() {

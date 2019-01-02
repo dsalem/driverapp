@@ -52,17 +52,17 @@ public class OpenRidesFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-         String email = getArguments().getString("email");
-         String password = getArguments().getString("password");
+        String email = getArguments().getString("email");
+        String password = getArguments().getString("password");
         getActivity().setTitle("Choose a ride");
         View view = inflater.inflate(R.layout.fragment_open_rides, container, false);
         backend = BackendFactory.getInstance();
         rideList = backend.getRideList();
 
         // listView
-        for (Driver d: backend.getDriverList()
-             ) {
-            if(d.getEmailAddress().equals(email) && d.getPassword().equals(password))
+        for (Driver d : backend.getDriverList()
+                ) {
+            if (d.getEmailAddress().equals(email) && d.getPassword().equals(password))
                 driver = d;
         }
 
@@ -88,8 +88,10 @@ public class OpenRidesFragment extends Fragment {
             }
         });
 
-
         myListView.setAdapter(adapter);
+        
+        // sets an empty view if filter returns an empty list
+        myListView.setEmptyView(view.findViewById(R.id.empty));
         registerForContextMenu(myListView);
 
         return view;

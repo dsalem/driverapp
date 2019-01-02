@@ -26,9 +26,17 @@
         <ListView
             android:id="@+id/ride_list_view"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content" />
 
-        </ListView>
+        <TextView
+            android:id="@+id/empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:text="@string/empty_list_message"
+            android:textColor="#525252"
+            android:textSize="36dp" />
+
 
     </LinearLayout>
 
@@ -60,14 +68,14 @@
                 android:id="@+id/call"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Call"
-                android:autoLink="phone"/>
+                android:autoLink="phone"
+                android:text="Call" />
 
             <Button
                 android:id="@+id/send_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="SMS"/>
+                android:text="SMS" />
 
             <Button
                 android:id="@+id/choose_ride"
