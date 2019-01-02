@@ -3,6 +3,7 @@ package adapters;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -10,6 +11,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import model.model.entities.Driver;
 import model.model.entities.Ride;
 
 public class RidesAdapter extends ArrayAdapter<Ride> implements Filterable {
@@ -51,7 +54,8 @@ public class RidesAdapter extends ArrayAdapter<Ride> implements Filterable {
         super(context, R.layout.location_row_layout, resource);
         this.context = context;
         this.origRideList = resource;
-        this.ridesList =  resource;
+        this.ridesList = resource;
+
     }
 
     public int getCount() {
@@ -126,7 +130,8 @@ public class RidesAdapter extends ArrayAdapter<Ride> implements Filterable {
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults results = new FilterResults();
             List<Ride> nRideList = new ArrayList<Ride>();
-
+            initiateLocation();
+            location = getGpsLocation();
             for (Ride p : ridesList) {
                 if (p.getStatus().equals(Ride.ClientRequestStatus.WAITING))
                     nRideList.add(p);
@@ -137,12 +142,15 @@ public class RidesAdapter extends ArrayAdapter<Ride> implements Filterable {
 
             } else {
                 // We perform filtering operation
-                for (Ride p : ridesList) {
-                    // ToDo calc distance from driver and filter
-                   //if (p.getLengthOfRide() <= Float.valueOf( constraint.toString()))
-                      //  nRideList.add(p);
+                List<Ride> temp = new ArrayList<Ride>();
+                for (Ride p : nRideList) {
+                    if (calcDistanceToDestination(location,p.getLocation()) <= Float.valueOf( constraint.toString()))
+                      temp.add(p);
+
                 }
+                nRideList = temp;
             }
+
             results.values = nRideList;
             results.count = nRideList.size();
             return results;
@@ -161,34 +169,30 @@ public class RidesAdapter extends ArrayAdapter<Ride> implements Filterable {
         }
     }
 
-public void initiateLocation() {
-    locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+    public void initiateLocation() {
+        locationManager = (LocationManager)  context.getSystemService(Context.LOCATION_SERVICE);
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 5);
+        // Define a listener that responds to location updates
+        locationListener = new LocationListener() {
+            public void onLocationChanged(Location locat) {
+                location = getGpsLocation();
+            }
+
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+            }
+
+            public void onProviderEnabled(String provider) {
+            }
+
+            public void onProviderDisabled(String provider) {
+            }
+        };
     }
-
-    // Define a listener that responds to location updates
-    locationListener = new LocationListener() {
-        public void onLocationChanged(Location locat) {
-            location = getGpsLocation();
-        }
-
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-        }
-
-        public void onProviderEnabled(String provider) {
-        }
-
-        public void onProviderDisabled(String provider) {
-        }
-    };
-}
 
     private Location getGpsLocation() {
         //     Check the SDK version and whether the permission is already granted or not.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 5);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // got premission in DriverActivity
         } else {
             // Android version is lesser than 6.0 or the permission is already granted.
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
@@ -196,48 +200,53 @@ public void initiateLocation() {
         return locationManager.getLastKnownLocation(locationManager.PASSIVE_PROVIDER);
     }
 
-
-    @SuppressLint("MissingPermission")
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == 5) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission is granted
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-
-            } else {
-                Toast.makeText(this, "Until you grant the permission, we cannot display the location", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-
-    public float calcDistanceToDestination(String startLocation, String destination) {
+    public float calcDistanceToDestination(Location startLocation, String destination) {
 
         //String startLocation = ride.getLocation();
-        Context context = getApplicationContext();
-        LatLng latLngLocation = getLocationFromAddress(context, startLocation);
-        double startLatitude = latLngLocation.latitude;
-        double startLongitude = latLngLocation.longitude;
+        Context context = this.context;
 
         // String destination = ride.getDestination();
         LatLng latLngDestination = getLocationFromAddress(context, destination);
         double endLatitude = latLngDestination.latitude;
         double endLongitude = latLngDestination.longitude;
 
-        Location locationA = new Location("point A");
-        locationA.setLatitude(startLatitude);
-        locationA.setLongitude(startLongitude);
-
         Location locationB = new Location("point B");
         locationB.setLatitude(endLatitude);
         locationB.setLongitude(endLongitude);
 
-        float distance = locationA.distanceTo(locationB);
+        float distance = startLocation.distanceTo(locationB);
         return (distance / 1000);
-        //return 0.52;
+
     }
 
+    public LatLng getLocationFromAddress(Context context, String inputtedAddress) {
 
+        Geocoder coder = new Geocoder(context);
+        List<Address> address;
+        LatLng resLatLng = null;
 
+        try {
+            // May throw an IOException
+            address = coder.getFromLocationName(inputtedAddress, 5);
+            if (address == null) {
+                return null;
+            }
+
+            if (address.size() == 0) {
+                return null;
+            }
+
+            Address location = address.get(0);
+            location.getLatitude();
+            location.getLongitude();
+
+            resLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+
+        } catch (IOException ex) {
+
+            ex.printStackTrace();
+            Toast.makeText(context, ex.getMessage(), Toast.LENGTH_LONG).show();
+        }
+        return resLatLng;
+    }
 }
