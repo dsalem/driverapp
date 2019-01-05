@@ -105,7 +105,7 @@ public class DriverHistoryAdapter extends ArrayAdapter<Ride> {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults results = new FilterResults();
-            List<Ride> nRideList = new ArrayList<Ride>();
+            List<Ride> nRideList = ridesList;
 
             // We implement here the filter logic
             if (constraint == null || constraint.length() == 0 ) {

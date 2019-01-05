@@ -13,7 +13,7 @@ public interface Backend {
     // Driver methods
     void addDriver(final Driver Driver, final Action action);
 
-    void removeDriver(long id, final Action action);
+    void removeDriver(final String key, final Action action);
 
     void updateRide(final Driver toUpdate, final Action action);
 
@@ -21,21 +21,22 @@ public interface Backend {
 
     void isDriversPasswordCorrect(String dEmail ,String dPassword, final Action action);
 
-    List<Driver> getDriverList();
+    Driver getDriver(String email ,String password);
 
-    // Rider methods
+    // Rides methods
     void addRide(final Ride Ride, final Action action);
 
     void removeRide(String phone, final Action action);
 
     void updateRide(final Ride toUpdate, final Action action);
 
-    List<Ride> getRideList();
+    List<Ride> getDriverHistoryList(Driver driver);
+
+    List<Ride> getWaitingList();
 
     void notifyToRideList(final NotifyDataChange<List<Ride>> notifyDataChange);
 
-
-    public interface Action<T> {
+    interface Action<T> {
         void onSuccess();
 
         void onFailure(Exception exception);
@@ -43,7 +44,7 @@ public interface Backend {
         void onProgress(String status, double percent);
     }
 
-    public interface NotifyDataChange<T> {
+    interface NotifyDataChange<T> {
         void OnDataChanged(T obj);
 
         void onFailure(Exception exception);

@@ -25,7 +25,7 @@ import static com.pickapp.driverapp.LoginActivity.Password;
 
 public class Firebase_DBManager implements Backend {
 
-    Firebase_DBManager() {
+    public Firebase_DBManager() {
 
         this.notifyToDriverList(new NotifyDataChange<List<Driver>>() {
             @Override
@@ -66,34 +66,30 @@ public class Firebase_DBManager implements Backend {
 
 
     public void addDriver(final Driver Driver, final Action action) {
-
-        String key = Driver.getId().toString();
         DriversRef.push().setValue(Driver).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 action.onSuccess();
-                action.onProgress("upload Ride data", 100);
+                action.onProgress("uploading Driver data", 100);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 action.onFailure(e);
-                action.onProgress("error upload Ride data", 100);
+                action.onProgress("error upload Driver data", 100);
 
             }
         });
     }
 
-    public void removeDriver(long id, final Action action) {
-
-        final String key = ((Long) id).toString();
+    public void removeDriver(final String key, final Action action) {
 
         DriversRef.child(key).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 final Driver value = dataSnapshot.getValue(Driver.class);
                 if (value == null)
-                    action.onFailure(new Exception("Driver not find ..."));
+                    action.onFailure(new Exception("Driver not found ..."));
                 else {
                     DriversRef.child(key).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
@@ -117,9 +113,8 @@ public class Firebase_DBManager implements Backend {
     }
 
     public void updateRide(final Driver toUpdate, final Action action) {
-        //final String key = ((Long) toUpdate.getPhone()).toString();
 
-        removeDriver(toUpdate.getId(), new Action<Long>() {
+        removeDriver(toUpdate.getHashId(), new Action<Long>() {
             @Override
             public void onSuccess() {
                 addDriver(toUpdate, action);
@@ -150,24 +145,21 @@ public class Firebase_DBManager implements Backend {
             DriverRefChildEventListener = new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    Driver Driver = dataSnapshot.getValue(Driver.class);
-                    String id = dataSnapshot.getKey();
-                    // Driver.setId(Long.parseLong(id));
-                    DriverList.add(Driver);
+                    Driver driver = dataSnapshot.getValue(Driver.class);
+                    driver.setHashId(dataSnapshot.getKey());
+                    DriverList.add(driver);
 
                     notifyDataChange.OnDataChanged(DriverList);
                 }
 
                 @Override
                 public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                    Driver Driver = dataSnapshot.getValue(Driver.class);
-                    Long id = Long.parseLong(dataSnapshot.getKey());
-                    Driver.setId(id);
-
+                    Driver driver = dataSnapshot.getValue(Driver.class);
+                    driver.setHashId(dataSnapshot.getKey());
 
                     for (int i = 0; i < DriverList.size(); i++) {
-                        if (DriverList.get(i).getId().equals(id)) {
-                            DriverList.set(i, Driver);
+                        if (DriverList.get(i).getHashId().equals(driver.getHashId())) {
+                            DriverList.set(i, driver);
                             break;
                         }
                     }
@@ -176,12 +168,11 @@ public class Firebase_DBManager implements Backend {
 
                 @Override
                 public void onChildRemoved(DataSnapshot dataSnapshot) {
-                    Driver Driver = dataSnapshot.getValue(Driver.class);
-                    Long id = Long.parseLong(dataSnapshot.getKey());
-                    Driver.setId(id);
+                    Driver driver = dataSnapshot.getValue(Driver.class);
+                    driver.setHashId(dataSnapshot.getKey());
 
                     for (int i = 0; i < DriverList.size(); i++) {
-                        if (DriverList.get(i).getId() == id) {
+                        if (DriverList.get(i).getHashId().equals(driver.getHashId())) {
                             DriverList.remove(i);
                             break;
                         }
@@ -228,6 +219,35 @@ public class Firebase_DBManager implements Backend {
 
     }
 
+    public Driver getDriver(String email, final String password) {
+
+        Driver driver = new Driver();
+        for (Driver d : DriverList
+             ) {
+            if(d.getPassword().equals(password) && d.getEmailAddress().equals(email))
+                driver =d;
+        }
+        return driver;
+        /*final Driver[] currentDriver = new Driver[1];
+
+        Query query = DriversRef.orderByChild("emailAddress").equalTo(email);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists())
+                    currentDriver[0] = dataSnapshot.getChildren().iterator().next().getValue(Driver.class);
+                else
+                    currentDriver[0] = new Driver();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+
+        return currentDriver[0];*/
+    }
+
     public void isDriversPasswordCorrect(String dEmail, final String dPassword, final Action action) {
         Query query = DriversRef.orderByChild("emailAddress").equalTo(dEmail);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -252,7 +272,7 @@ public class Firebase_DBManager implements Backend {
 
     }
 
-    public List<Driver> getDriverList(){return DriverList;}
+
 // *********************  Rider methods for database *******************88
 
     static DatabaseReference RidesRef;
@@ -332,9 +352,27 @@ public class Firebase_DBManager implements Backend {
         });
     }
 
-    public List<Ride> getRideList() {
-        return RideList;
+    public List<Ride> getDriverHistoryList(Driver driver) {
+        List<Ride> driversRideList = new ArrayList<Ride>();
+        for (Ride r : RideList
+                ) {
+            if (r.getStatus() == Ride.ClientRequestStatus.CLOSED)
+                if (r.getDriverName().equals(driver.getFirstName()))
+                    driversRideList.add(r);
+        }
+        return driversRideList;
     }
+
+    public List<Ride> getWaitingList() {
+        List<Ride> rideList = new ArrayList<Ride>();
+        for (Ride r : RideList
+                ) {
+            if (r.getStatus() == Ride.ClientRequestStatus.WAITING)
+                rideList.add(r);
+        }
+        return rideList;
+    }
+
 
     private static ChildEventListener RideRefChildEventListener;
 

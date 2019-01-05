@@ -1,28 +1,20 @@
 package com.pickapp.driverapp;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.net.IDN;
 import java.util.List;
 
 import model.model.backend.Backend;
-import model.model.datasource.BackendFactory;
-import model.model.datasource.Firebase_DBManager;
+import model.model.backend.BackendFactory;
 import model.model.entities.Driver;
-
-import static com.pickapp.driverapp.LoginActivity.Email;
-import static com.pickapp.driverapp.LoginActivity.Password;
 
 public class RegisterActivity extends AppCompatActivity {
 

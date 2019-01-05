@@ -11,6 +11,7 @@ public class Driver {
     private String emailAddress;
     private Long creditCard;
     private String password;
+    private String hashId;
 
     /**
      *
@@ -136,5 +137,13 @@ public class Driver {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getHashId() {
+        return hashId;
+    }
+
+    public void setHashId(String hashId) {
+        this.hashId = hashId;
     }
 }

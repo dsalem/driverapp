@@ -1,25 +1,16 @@
 package com.pickapp.driverapp;
 
-import android.Manifest;
 import android.app.Fragment;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.telephony.SmsManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -30,7 +21,7 @@ import java.util.List;
 
 import adapters.RidesAdapter;
 import model.model.backend.Backend;
-import model.model.datasource.BackendFactory;
+import model.model.backend.BackendFactory;
 import model.model.entities.Driver;
 import model.model.entities.Ride;
 
@@ -57,14 +48,9 @@ public class OpenRidesFragment extends Fragment {
         getActivity().setTitle("Choose a ride");
         View view = inflater.inflate(R.layout.fragment_open_rides, container, false);
         backend = BackendFactory.getInstance();
-        rideList = backend.getRideList();
+        rideList = backend.getWaitingList();
 
-        // listView
-        for (Driver d : backend.getDriverList()
-                ) {
-            if (d.getEmailAddress().equals(email) && d.getPassword().equals(password))
-                driver = d;
-        }
+        driver = backend.getDriver(email,password);
 
         adapter = new RidesAdapter(view.getContext(), rideList);
 

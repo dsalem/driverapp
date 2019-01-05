@@ -22,7 +22,7 @@ import android.content.SharedPreferences;
 import android.widget.Toast;
 
 import model.model.backend.Backend;
-import model.model.datasource.BackendFactory;
+import model.model.backend.BackendFactory;
 
 /**
  * A login screen that offers login via email/password.

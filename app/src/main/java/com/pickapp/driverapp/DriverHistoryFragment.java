@@ -6,16 +6,14 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Spinner;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import adapters.DriverHistoryAdapter;
 import model.model.backend.Backend;
-import model.model.datasource.BackendFactory;
+import model.model.backend.BackendFactory;
 import model.model.entities.Driver;
 import model.model.entities.Ride;
 
@@ -39,20 +37,12 @@ public class DriverHistoryFragment extends Fragment {
 
         String email = getArguments().getString("email");
         String password = getArguments().getString("password");
-        Driver driver = new Driver();
-        for (Driver d : backend.getDriverList()
-                ) {
-            if (d.getPassword().equals(password) && d.getEmailAddress().equals(email))
-                driver = d;
-        }
+
+        Driver driver = backend.getDriver(email, password);
 
         // gets all the rides that this driver took
-        for (Ride r : backend.getRideList()
-                ) {
-            if (r.getStatus() == Ride.ClientRequestStatus.CLOSED)
-                if (r.getDriverName().equals(driver.getFirstName()))
-                    driversRideList.add(r);
-        }
+        driversRideList = backend.getDriverHistoryList(driver);
+
         adapter = new DriverHistoryAdapter(view.getContext(), driversRideList);
         myListView.setAdapter(adapter);
         myListView.setEmptyView(view.findViewById(R.id.no_history));

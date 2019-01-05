@@ -129,13 +129,10 @@ public class RidesAdapter extends ArrayAdapter<Ride> implements Filterable {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults results = new FilterResults();
-            List<Ride> nRideList = new ArrayList<Ride>();
+            List<Ride> nRideList = ridesList;
             initiateLocation();
             location = getGpsLocation();
-            for (Ride p : ridesList) {
-                if (p.getStatus().equals(Ride.ClientRequestStatus.WAITING))
-                    nRideList.add(p);
-            }
+
             // We implement here the filter logic
             if (constraint == null || constraint.length() == 0 || constraint.equals("all")) {
                 // No filter implemented we return all the list
