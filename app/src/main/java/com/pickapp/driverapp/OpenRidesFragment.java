@@ -1,8 +1,13 @@
 package com.pickapp.driverapp;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -12,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,11 +52,11 @@ public class OpenRidesFragment extends Fragment {
         String email = getArguments().getString("email");
         String password = getArguments().getString("password");
         getActivity().setTitle("Choose a ride");
-        View view = inflater.inflate(R.layout.fragment_open_rides, container, false);
+        final View view = inflater.inflate(R.layout.fragment_open_rides, container, false);
         backend = BackendFactory.getInstance();
         rideList = backend.getWaitingList();
 
-        driver = backend.getDriver(email,password);
+        driver = backend.getDriver(email, password);
 
         adapter = new RidesAdapter(view.getContext(), rideList);
 
@@ -58,7 +64,7 @@ public class OpenRidesFragment extends Fragment {
         setLiteners();
 
         // initializing spinner
-        String[] items = new String[]{"all", "500", "250", "100", "50"};
+        String[] items = new String[]{"all", "50", "25", "10", "5"};
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_spinner_dropdown_item, items);
         filter.setAdapter(arrayAdapter);
         filter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -73,6 +79,7 @@ public class OpenRidesFragment extends Fragment {
                 return;
             }
         });
+
 
         myListView.setAdapter(adapter);
 
@@ -142,32 +149,54 @@ public class OpenRidesFragment extends Fragment {
             }
         });
         pickButton.setOnClickListener(new View.OnClickListener() {
+
+
             @Override
             public void onClick(final View v) {
-                ride.setStatus(Ride.ClientRequestStatus.HANDLING);
-                ride.setStartTime(new Date());
-                ride.setDriverName(driver.getFirstName());
-                backend.updateRide(ride, new Backend.Action() {
-                    @Override
-                    public void onSuccess() {
-                        Toast.makeText(v.getContext(), "Ride have been approved\n passenger is awaiting at:\n\t " + ride.getLocation(), Toast.LENGTH_LONG).show();
+                AlertDialog.Builder builder;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    builder = new AlertDialog.Builder(getView().getContext(), android.R.style.Theme_Material_Dialog_Alert);
+                } else {
+                    builder = new AlertDialog.Builder(getView().getContext());
+                }
+                builder.setTitle("PickApp?")
+                        .setMessage("Are you sure you want to take this ride?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                ride.setStatus(Ride.ClientRequestStatus.HANDLING);
+                                ride.setStartTime(new Date());
+                                ride.setDriverName(driver.getFirstName());
+                                backend.updateRide(ride, new Backend.Action() {
+                                    @Override
+                                    public void onSuccess() {
+                                        Toast.makeText(v.getContext(), "Ride have been approved\n passenger is awaiting at:\n\t " + ride.getLocation(), Toast.LENGTH_LONG).show();
 
-                    }
+                                    }
 
-                    @Override
-                    public void onFailure(Exception exception) {
-                        Toast.makeText(v.getContext(), "Error \n" + exception.getMessage(), Toast.LENGTH_LONG).show();
-                    }
+                                    @Override
+                                    public void onFailure(Exception exception) {
+                                        Toast.makeText(v.getContext(), "Error \n" + exception.getMessage(), Toast.LENGTH_LONG).show();
+                                    }
 
-                    @Override
-                    public void onProgress(String status, double percent) {
-                    }
-                });
-                smsButton.setEnabled(true);
-                callButton.setEnabled(true);
+                                    @Override
+                                    public void onProgress(String status, double percent) {
+                                    }
+                                });
+                                smsButton.setEnabled(true);
+                                callButton.setEnabled(true);
 
-                // just for testing
-                rideCompleteButton.setEnabled(true);
+                                // just for testing
+                                rideCompleteButton.setEnabled(true);
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+
             }
         });
 

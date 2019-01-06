@@ -31,6 +31,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import model.model.backend.Backend;
+import model.model.backend.BackendFactory;
 import model.model.entities.Driver;
 import model.model.entities.Ride;
 
@@ -41,7 +43,7 @@ public class RidesAdapter extends ArrayAdapter<Ride> implements Filterable {
     private Filter myRideFilter;
     private List<Ride> origRideList;
     private Location location = null;
-
+private Backend backend;
     // Acquire a reference to the system Location Manager
     LocationManager locationManager;
 
@@ -55,6 +57,7 @@ public class RidesAdapter extends ArrayAdapter<Ride> implements Filterable {
         this.context = context;
         this.origRideList = resource;
         this.ridesList = resource;
+        backend = BackendFactory.getInstance();
 
     }
 
@@ -129,7 +132,7 @@ public class RidesAdapter extends ArrayAdapter<Ride> implements Filterable {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults results = new FilterResults();
-            List<Ride> nRideList = ridesList;
+            List<Ride> nRideList = backend.getWaitingList();
             initiateLocation();
             location = getGpsLocation();
 
