@@ -40,10 +40,7 @@ public class OpenRidesFragment extends Fragment {
     private Driver driver;
     ListView myListView;
     private Spinner filter;
-    private Button callButton;
-    private Button smsButton;
     private Button pickButton;
-    private Button rideCompleteButton;
     private TextView nameAndDestenation;
 
     @Nullable
@@ -95,16 +92,10 @@ public class OpenRidesFragment extends Fragment {
     public void findViews(View v) {
         myListView = (ListView) v.findViewById(R.id.ride_list_view);
         filter = (Spinner) v.findViewById(R.id.filter_spinner);
-        callButton = (Button) v.findViewById(R.id.call);
-        smsButton = (Button) v.findViewById(R.id.send_message);
         pickButton = (Button) v.findViewById(R.id.choose_ride);
-        rideCompleteButton = (Button) v.findViewById(R.id.ride_completed);
         nameAndDestenation = (TextView) v.findViewById(R.id.name_and_destination);
-
         pickButton.setEnabled(false);
-        callButton.setEnabled(false);
-        smsButton.setEnabled(false);
-        rideCompleteButton.setEnabled(false);
+
 
     }
 
@@ -116,43 +107,12 @@ public class OpenRidesFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ride = (Ride) myListView.getItemAtPosition(position);
                 nameAndDestenation.setText(ride.getName() + " wants to go to " + ride.getDestination());
-              //  callButton.setText(ride.getPhone());
+                //  callButton.setText(ride.getPhone());
                 pickButton.setEnabled(true);
             }
         });
 
-        callButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                Intent intent = new Intent(Intent.ACTION_DIAL);
-                //intent.setData(Uri.parse("tel:0123456789"));
-                intent.setData(Uri.parse("tel:" + ride.getPhone()));
-                startActivity(intent);
-                rideCompleteButton.setEnabled(true);
-            }
-        });
-
-        smsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                String smsNumber = ride.getPhone();
-                String smsText = "Hey " + ride.getName() + " I'm on my way to " + ride.getLocation() +" to take you to " + ride.getDestination();
-
-                Uri uri = Uri.parse("smsto:" + smsNumber);
-                Intent intent = new Intent(Intent.ACTION_SENDTO, uri);
-                intent.putExtra("sms_body", smsText);
-                startActivity(intent);
-                //if we want to send a text message without opening the text messaging app
-                /*String messageToSend = "Hey" + ride.getName() + "I'll be by you in 2 minutes" ;
-                String number = ride.getPhone();
-
-                SmsManager.getDefault().sendTextMessage(number, null, messageToSend, null,null);
-*/
-                rideCompleteButton.setEnabled(true);
-            }
-        });
         pickButton.setOnClickListener(new View.OnClickListener() {
 
 
@@ -187,11 +147,10 @@ public class OpenRidesFragment extends Fragment {
                                     public void onProgress(String status, double percent) {
                                     }
                                 });
-                                smsButton.setEnabled(true);
-                                callButton.setEnabled(true);
+                                Intent intent = new Intent(getActivity(), MapActivity.class);
+                                intent.putExtra("rideId", ride.getRideId());
+                                startActivity(intent);
 
-                                // just for testing
-                                rideCompleteButton.setEnabled(true);
                             }
                         })
                         .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -201,33 +160,9 @@ public class OpenRidesFragment extends Fragment {
                         })
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .show();
-
             }
         });
 
-        rideCompleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                ride.setStatus(Ride.ClientRequestStatus.CLOSED);
-                ride.setStartTime(new Date());
-                backend.updateRide(ride, new Backend.Action() {
-                    @Override
-                    public void onSuccess() {
-                        Toast.makeText(v.getContext(), "Ride complete!", Toast.LENGTH_LONG).show();
-
-                    }
-
-                    @Override
-                    public void onFailure(Exception exception) {
-                        Toast.makeText(v.getContext(), "Error \n" + exception.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-
-                    @Override
-                    public void onProgress(String status, double percent) {
-                    }
-                });
-            }
-        });
 
     }
 }
