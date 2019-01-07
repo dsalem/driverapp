@@ -116,7 +116,7 @@ public class OpenRidesFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ride = (Ride) myListView.getItemAtPosition(position);
                 nameAndDestenation.setText(ride.getName() + " wants to go to " + ride.getDestination());
-                callButton.setText(ride.getPhone());
+              //  callButton.setText(ride.getPhone());
                 pickButton.setEnabled(true);
             }
         });
@@ -124,6 +124,11 @@ public class OpenRidesFragment extends Fragment {
         callButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                //intent.setData(Uri.parse("tel:0123456789"));
+                intent.setData(Uri.parse("tel:" + ride.getPhone()));
+                startActivity(intent);
                 rideCompleteButton.setEnabled(true);
             }
         });
@@ -133,7 +138,7 @@ public class OpenRidesFragment extends Fragment {
             public void onClick(View v) {
 
                 String smsNumber = ride.getPhone();
-                String smsText = "Hey " + ride.getName() + "I'll be by you in 2 minutes";
+                String smsText = "Hey " + ride.getName() + " I'm on my way to " + ride.getLocation() +" to take you to " + ride.getDestination();
 
                 Uri uri = Uri.parse("smsto:" + smsNumber);
                 Intent intent = new Intent(Intent.ACTION_SENDTO, uri);
