@@ -34,6 +34,8 @@ public interface Backend {
 
     List<Ride> getWaitingList();
 
+    Ride getRider(String id);
+
     void notifyToRideList(final NotifyDataChange<List<Ride>> notifyDataChange);
 
     interface Action<T> {

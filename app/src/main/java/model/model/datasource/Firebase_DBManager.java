@@ -373,6 +373,15 @@ public class Firebase_DBManager implements Backend {
         return rideList;
     }
 
+    public Ride getRider(String id){
+        Ride ride = new Ride();
+        for (Ride r: RideList
+             ) {
+            if(r.getRideId().equals(id))
+                ride = r;
+        }
+        return ride;
+    }
 
     private static ChildEventListener RideRefChildEventListener;
 
