@@ -112,7 +112,6 @@ public class OpenRidesFragment extends Fragment {
             }
         });
 
-
         pickButton.setOnClickListener(new View.OnClickListener() {
 
 
