@@ -116,8 +116,8 @@ public class DriverActivity extends AppCompatActivity
             createFragment(new OpenRidesFragment());
         } else if (id == R.id.nav_view_history) {
            createFragment(new DriverHistoryFragment());
-        } else if (id == R.id.nav_slideshow) {
-
+        } else if (id == R.id.nav_stats) {
+            createFragment(new statsFragment());
         } else if (id == R.id.nav_log_out) {
             finish();
         }

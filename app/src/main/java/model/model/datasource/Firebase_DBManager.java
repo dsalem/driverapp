@@ -223,9 +223,9 @@ public class Firebase_DBManager implements Backend {
 
         Driver driver = new Driver();
         for (Driver d : DriverList
-             ) {
-            if(d.getPassword().equals(password) && d.getEmailAddress().equals(email))
-                driver =d;
+                ) {
+            if (d.getPassword().equals(password) && d.getEmailAddress().equals(email))
+                driver = d;
         }
         return driver;
         /*final Driver[] currentDriver = new Driver[1];
@@ -269,6 +269,19 @@ public class Firebase_DBManager implements Backend {
 
             }
         });
+
+    }
+
+    public int totalKmsForDriver(Driver driver) {
+        int kms = 0;
+        for (Ride r : RideList) {
+            if (r.getStatus()==(Ride.ClientRequestStatus.CLOSED)) {
+                if (r.getDriverName().equals(driver.getFirstName()))
+                    kms += r.getLengthOfRide();
+            }
+        }
+
+        return kms;
 
     }
 
@@ -373,11 +386,11 @@ public class Firebase_DBManager implements Backend {
         return rideList;
     }
 
-    public Ride getRider(String id){
+    public Ride getRider(String id) {
         Ride ride = new Ride();
-        for (Ride r: RideList
-             ) {
-            if(r.getRideId().equals(id))
+        for (Ride r : RideList
+                ) {
+            if (r.getRideId().equals(id))
                 ride = r;
         }
         return ride;

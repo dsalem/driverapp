@@ -23,6 +23,8 @@ public interface Backend {
 
     Driver getDriver(String email ,String password);
 
+    int totalKmsForDriver(Driver driver);
+
     // Rides methods
     void addRide(final Ride Ride, final Action action);
 

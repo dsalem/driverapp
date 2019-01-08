@@ -13,9 +13,9 @@
             android:icon="@drawable/ic_history_contact"
             android:title="View history" />
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/nav_stats"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
+            android:title="My Stats" />
         <item
             android:id="@+id/nav_log_out"
             android:icon="@drawable/ic_menu_manage"
