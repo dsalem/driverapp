@@ -347,24 +347,8 @@ public class Firebase_DBManager implements Backend {
 
     public void updateRide(final Ride toUpdate, final Action action) {
 
-        removeRide(toUpdate.getRideId(), new Action() {
-            @Override
-            public void onSuccess() {
-                addRide(toUpdate, action);
-            }
-
-            @Override
-            public void onFailure(Exception exception) {
-                action.onFailure(exception);
-            }
-
-            @Override
-            public void onProgress(String status, double percent) {
-                action.onProgress(status, percent);
-            }
-        });
+        addRide(toUpdate, action);
     }
-
     public List<Ride> getDriverHistoryList(Driver driver) {
         List<Ride> driversRideList = new ArrayList<Ride>();
         for (Ride r : RideList

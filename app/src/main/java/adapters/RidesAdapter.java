@@ -43,7 +43,7 @@ public class RidesAdapter extends ArrayAdapter<Ride> implements Filterable {
     private Filter myRideFilter;
     private List<Ride> origRideList;
     private Location location = null;
-private Backend backend;
+    private Backend backend;
     // Acquire a reference to the system Location Manager
     LocationManager locationManager;
 

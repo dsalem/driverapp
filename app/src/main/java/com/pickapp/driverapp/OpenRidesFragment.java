@@ -112,7 +112,6 @@ public class OpenRidesFragment extends Fragment {
             }
         });
 
-
         pickButton.setOnClickListener(new View.OnClickListener() {
 
 
@@ -131,6 +130,7 @@ public class OpenRidesFragment extends Fragment {
                                 ride.setStatus(Ride.ClientRequestStatus.HANDLING);
                                 ride.setStartTime(new Date());
                                 ride.setDriverName(driver.getFirstName());
+
                                 backend.updateRide(ride, new Backend.Action() {
                                     @Override
                                     public void onSuccess() {
