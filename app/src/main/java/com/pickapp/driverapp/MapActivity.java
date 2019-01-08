@@ -130,7 +130,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             @Override
             public void onClick(final View v) {
                 ride.setStatus(Ride.ClientRequestStatus.CLOSED);
-                ride.setStartTime(new Date());
+                ride.setFinishTime(new Date());
                 backend.updateRide(ride, new Backend.Action() {
                     @Override
                     public void onSuccess() {
@@ -163,6 +163,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         LatLng driverLocation = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
 
         LatLng rideLocation = getLocationFromAddress(this, ride.getLocation());
+        // LatLng rideLocation = getLocationFromAddress(this, "יפו 113, ירושלים, ישראל");
 
         map.addMarker(new MarkerOptions().position(driverLocation).title("Your location"));
 
@@ -222,10 +223,10 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             ex.printStackTrace();
             Toast.makeText(context, ex.getMessage(), Toast.LENGTH_LONG).show();
         }
-        return resLatLng;
+         return resLatLng;
     }
-
-   /* private class DownloadTask extends AsyncTask<String, Void, String> {
+/*
+    private class DownloadTask extends AsyncTask<String, Void, String> {
 
         @Override
         protected String doInBackground(String... url) {
@@ -328,11 +329,11 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         String output = "json";
 
         // Building the url to the web service
-        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
-
+        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters + "&key=AIzaSyC8AwyRywpHGrMl3mDUz-d3E1-LOAoIAyA";
+//
 
         return url;
-    }
+    }*/
 
     /**
      * A method to download json data from url
