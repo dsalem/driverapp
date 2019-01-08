@@ -58,11 +58,9 @@ public class statsFragment extends Fragment {
 
         return view;
     }
+
     public void findViews(View v) {
         textViewKm = (TextView) v.findViewById(R.id.textViewKm);
-
-
-
     }
 
 }
