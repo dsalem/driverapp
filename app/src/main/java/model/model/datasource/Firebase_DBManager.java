@@ -286,14 +286,13 @@ public class Firebase_DBManager implements Backend {
     }
 
     public int[] getMonthlyEarnings(Driver driver) {
-        int monthlyEarnings[] = {0,0,0,0,0,0,0,0,0,0,0,0};
+        int monthlyEarnings[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
         for (Ride r : RideList) {
             if (r.getStatus()==(Ride.ClientRequestStatus.CLOSED)) {
                 if (r.getDriverName().equals(driver.getFirstName()))
-                    monthlyEarnings[r.getStartTime().getMonth()] += r.getLengthOfRide();
+                    monthlyEarnings[r.getStartTime().getDate()] += r.getLengthOfRide();
             }
         }
-
         return monthlyEarnings;
     }
 

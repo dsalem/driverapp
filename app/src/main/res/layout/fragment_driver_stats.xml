@@ -1,16 +1,29 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <TextView
-        android:id ="@+id/textViewKm"
+        android:id="@+id/textViewKm"
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:gravity="center_horizontal|center"
+        android:textColor="@color/colorPrimary"
+        android:textSize="32dp" />
+
+    <TextView
+        android:id="@+id/textViewEarnings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
     <ProgressBar
         android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleHorizontal"
+        style="@android:style/Widget.ProgressBar.Horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    android:layout_height="42dp" />
+        android:layout_height="44dp"
+        tools:theme="@style/Base.TextAppearance.AppCompat.Large"
+        android:paddingBottom="5dp"/>
 
     <lecho.lib.hellocharts.view.LineChartView
         android:id="@+id/chart"
