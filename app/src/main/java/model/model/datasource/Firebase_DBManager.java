@@ -275,12 +275,26 @@ public class Firebase_DBManager implements Backend {
     public int totalKmsForDriver(Driver driver) {
         int kms = 0;
         for (Ride r : RideList) {
-                if (r.getStatus() == Ride.ClientRequestStatus.CLOSED)
-                    if (r.getDriverName().equals(driver.getFirstName())){
+            if (r.getStatus()==(Ride.ClientRequestStatus.CLOSED)) {
+                if (r.getDriverName().equals(driver.getFirstName()))
                     kms += r.getLengthOfRide();
-                }
+            }
         }
+
         return kms;
+
+    }
+
+    public int[] getMonthlyEarnings(Driver driver) {
+        int monthlyEarnings[] = {0,0,0,0,0,0,0,0,0,0,0,0};
+        for (Ride r : RideList) {
+            if (r.getStatus()==(Ride.ClientRequestStatus.CLOSED)) {
+                if (r.getDriverName().equals(driver.getFirstName()))
+                    monthlyEarnings[r.getStartTime().getMonth()] += r.getLengthOfRide();
+            }
+        }
+
+        return monthlyEarnings;
     }
 
 
@@ -347,7 +361,6 @@ public class Firebase_DBManager implements Backend {
 
         addRide(toUpdate, action);
     }
-
     public List<Ride> getDriverHistoryList(Driver driver) {
         List<Ride> driversRideList = new ArrayList<Ride>();
         for (Ride r : RideList
