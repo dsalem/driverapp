@@ -285,6 +285,18 @@ public class Firebase_DBManager implements Backend {
 
     }
 
+    public int[] getMonthlyEarnings(Driver driver) {
+        int monthlyEarnings[] = {0,0,0,0,0,0,0,0,0,0,0,0};
+        for (Ride r : RideList) {
+            if (r.getStatus()==(Ride.ClientRequestStatus.CLOSED)) {
+                if (r.getDriverName().equals(driver.getFirstName()))
+                    monthlyEarnings[r.getStartTime().getMonth()] += r.getLengthOfRide();
+            }
+        }
+
+        return monthlyEarnings;
+    }
+
 
 // *********************  Rider methods for database *******************88
 
