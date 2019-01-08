@@ -21,6 +21,10 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyC8AwyRywpHGrMl3mDUz-d3E1-LOAoIAyA" />
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".LoginActivity" />
+
         <activity
             android:name=".LoginActivity"
             android:label="@string/app_name">
@@ -30,11 +34,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".RegisterActivity" />
         <activity
             android:name=".DriverActivity"
-            android:label="@string/title_activity_driver"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_activity_driver" />
 
         <service
             android:name=".NotificationService"
@@ -46,7 +50,11 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".MapActivity"></activity>
+        <activity android:name=".MapActivity"
+            android:label="@string/map_activity"
+            >
+
+        </activity>
     </application>
 
 </manifest>
