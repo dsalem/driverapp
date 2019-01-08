@@ -5,6 +5,8 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -26,7 +28,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 import model.model.backend.Backend;
 import model.model.backend.BackendFactory;
@@ -141,9 +145,15 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         }
         map.setMyLocationEnabled(true);
         myLocation = getGpsLocation();
-        LatLng sydney = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
-        map.addMarker(new MarkerOptions().position(sydney).title("Marker in your location"));
-        map.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+        LatLng driverLocation = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+
+        LatLng rideLocation = getLocationFromAddress(this, ride.getLocation());
+
+        map.addMarker(new MarkerOptions().position(driverLocation).title("Your location"));
+
+        map.addMarker(new MarkerOptions().position(rideLocation).title("Passenger location"));
+        map.moveCamera(CameraUpdateFactory.newLatLng(driverLocation));
     }
 
     @Override
@@ -160,5 +170,36 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
         }
         return locationManager.getLastKnownLocation(locationManager.PASSIVE_PROVIDER);
+    }
+
+    public LatLng getLocationFromAddress(Context context, String inputtedAddress) {
+
+        Geocoder coder = new Geocoder(context);
+        List<Address> address;
+        LatLng resLatLng = null;
+
+        try {
+            // May throw an IOException
+            address = coder.getFromLocationName(inputtedAddress, 5);
+            if (address == null) {
+                return null;
+            }
+
+            if (address.size() == 0) {
+                return null;
+            }
+
+            Address location = address.get(0);
+            location.getLatitude();
+            location.getLongitude();
+
+            resLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+
+        } catch (IOException ex) {
+
+            ex.printStackTrace();
+            Toast.makeText(context, ex.getMessage(), Toast.LENGTH_LONG).show();
+        }
+        return resLatLng;
     }
 }
