@@ -36,6 +36,8 @@ dependencies {
     implementation "com.google.android.gms:play-services-maps:15.0.1"
     implementation "com.google.android.gms:play-services-places:15.0.1"
 
+    implementation 'com.github.lecho:hellocharts-library:1.5.8@aar'
+
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
