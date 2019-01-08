@@ -1,10 +1,14 @@
 package com.pickapp.driverapp;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.ComponentName;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -119,7 +123,33 @@ public class DriverActivity extends AppCompatActivity
         } else if (id == R.id.nav_stats) {
             createFragment(new statsFragment());
         } else if (id == R.id.nav_log_out) {
-            finish();
+            AlertDialog.Builder builder;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+            } else {
+                builder = new AlertDialog.Builder(this);
+            }
+            builder.setTitle("EXIT?")
+                    .setMessage("Are you sure you want to EXIT this app?")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+                            homeIntent.addCategory(Intent.CATEGORY_HOME);
+                            homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+                            //go to phones home screen
+                            startActivity(homeIntent);
+                            finish();
+                            System.exit(0);
+        }
+    })
+            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int which) {
+            // do nothing
+        }
+    })
+            .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
