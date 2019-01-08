@@ -19,7 +19,7 @@
         <item
             android:id="@+id/nav_log_out"
             android:icon="@drawable/ic_menu_manage"
-            android:title="Log out" />
+            android:title="Exit" />
     </group>
 
 </menu>

@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">driver app</string>
-<string name="map_activity">map</string>
+    <string name="map_activity">map</string>
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (optional)</string>
@@ -23,4 +23,7 @@
     <string name="service_description">gives notification on new rides</string>
     <string name="empty_list_message">no matches for your search radius</string>
     <string name="no_history_message">No history yet</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -48,7 +48,7 @@ public class OpenRidesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         String email = getArguments().getString("email");
         String password = getArguments().getString("password");
-        getActivity().setTitle("Choose a ride");
+        getActivity().setTitle("Find ride");
         final View view = inflater.inflate(R.layout.fragment_open_rides, container, false);
         backend = BackendFactory.getInstance();
         rideList = backend.getWaitingList();
