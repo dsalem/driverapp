@@ -14,11 +14,11 @@
             android:title="View history" />
         <item
             android:id="@+id/nav_stats"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_charts"
             android:title="My Stats" />
         <item
             android:id="@+id/nav_log_out"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_exit_from_app"
             android:title="Exit" />
     </group>
 
