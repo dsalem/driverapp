@@ -14,6 +14,8 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -275,7 +277,7 @@ public class Firebase_DBManager implements Backend {
     public int totalKmsForDriver(Driver driver) {
         int kms = 0;
         for (Ride r : RideList) {
-            if (r.getStatus()==(Ride.ClientRequestStatus.CLOSED)) {
+            if (r.getStatus() == (Ride.ClientRequestStatus.CLOSED)) {
                 if (r.getDriverName().equals(driver.getFirstName()))
                     kms += r.getLengthOfRide();
             }
@@ -285,12 +287,30 @@ public class Firebase_DBManager implements Backend {
 
     }
 
-    public int[] getMonthlyEarnings(Driver driver) {
-        int monthlyEarnings[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    public int[] getMonthlyKms(Driver driver) {
+        int monthlyKms[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        Calendar c = Calendar.getInstance();
+        int currentMonth = c.get(Calendar.MONTH);
         for (Ride r : RideList) {
-            if (r.getStatus()==(Ride.ClientRequestStatus.CLOSED)) {
-                if (r.getDriverName().equals(driver.getFirstName()))
-                    monthlyEarnings[r.getStartTime().getDate()] += r.getLengthOfRide();
+            if (r.getStatus() == (Ride.ClientRequestStatus.CLOSED)) {
+                if (r.getStartTime().getMonth() == currentMonth)
+                    if (r.getDriverName().equals(driver.getFirstName()))
+                        monthlyKms[r.getStartTime().getDate()] += r.getLengthOfRide();
+            }
+        }
+        return monthlyKms;
+    }
+
+    @Override
+    public int getMonthlyEarnings(Driver driver) {
+        int monthlyEarnings = 0;
+        Calendar c = Calendar.getInstance();
+        int currentMonth = c.get(Calendar.MONTH);
+        for (Ride r : RideList) {
+            if (r.getStatus() == (Ride.ClientRequestStatus.CLOSED)) {
+                if (r.getStartTime().getMonth() == currentMonth)
+                    if (r.getDriverName().equals(driver.getFirstName()))
+                        monthlyEarnings += r.getLengthOfRide()*5;
             }
         }
         return monthlyEarnings;
@@ -360,6 +380,7 @@ public class Firebase_DBManager implements Backend {
 
         addRide(toUpdate, action);
     }
+
     public List<Ride> getDriverHistoryList(Driver driver) {
         List<Ride> driversRideList = new ArrayList<Ride>();
         for (Ride r : RideList

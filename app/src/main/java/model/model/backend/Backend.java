@@ -25,7 +25,9 @@ public interface Backend {
 
     int totalKmsForDriver(Driver driver);
 
-    int[] getMonthlyEarnings(Driver driver);
+    int[] getMonthlyKms(Driver driver);
+
+    int getMonthlyEarnings(Driver driver);
 
     // Rides methods
     void addRide(final Ride Ride, final Action action);

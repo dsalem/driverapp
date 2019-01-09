@@ -35,7 +35,7 @@ import model.model.datasource.Firebase_DBManager;
 public class statsFragment extends Fragment {
 
 
-    private List<Ride> driversRideList = new ArrayList<Ride>();
+  //  private List<Ride> driversRideList = new ArrayList<Ride>();
     private Backend backend;
     private TextView textViewKm;
     private TextView textViewEarnings;
@@ -60,8 +60,6 @@ public class statsFragment extends Fragment {
         findViews(view);
 
         backend = BackendFactory.getInstance();
-        // textViewKm.findViewById(R.id.textViewKm);
-        // textViewKm.findViewById(R.id.textViewKm);
 
         getActivity().setTitle("View Stats");
         String email = getArguments().getString("email");
@@ -77,13 +75,13 @@ public class statsFragment extends Fragment {
         totalEarnings = calcEarnings(totalKms);
 
         textViewKm.setText(Integer.toString(totalKms) + " KM");
-        textViewEarnings.setText(totalEarnings + " shekels of goal");
+        textViewEarnings.setText(backend.getMonthlyEarnings(driver) + " shekels of goal");
 
-        goalsProgressBar.setMax(100);
-        goalsProgressBar.setProgress((int) totalEarnings);
+        goalsProgressBar.setMax(10000);
+        goalsProgressBar.setProgress(backend.getMonthlyEarnings(driver));
 
 
-        yAxisData = backend.getMonthlyEarnings(driver);
+        yAxisData = backend.getMonthlyKms(driver);
         List yAxisValues = new ArrayList();
         List axisValues = new ArrayList();
 
@@ -111,14 +109,14 @@ public class statsFragment extends Fragment {
         data.setAxisXBottom(axis);
 
         Axis yAxis = new Axis();
-        yAxis.setName("Sales in millions");
+        yAxis.setName("Kilometers");
         yAxis.setTextColor(Color.parseColor("#03A9F4"));
         yAxis.setTextSize(16);
         data.setAxisYLeft(yAxis);
 
         lineChartView.setLineChartData(data);
         Viewport viewport = new Viewport(lineChartView.getMaximumViewport());
-        viewport.top = 100;
+        viewport.top = 150;
         lineChartView.setMaximumViewport(viewport);
         lineChartView.setCurrentViewport(viewport);
 
