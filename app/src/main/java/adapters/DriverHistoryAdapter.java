@@ -1,8 +1,15 @@
 package adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.database.Cursor;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
+import android.os.Build;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,11 +70,10 @@ public class DriverHistoryAdapter extends ArrayAdapter<Ride> {
             holder.nameOfContact = (TextView) v.findViewById(R.id.contact_name);
 
             v.setTag(holder);
-        }
-        else
+        } else
             holder = (RideHistoryHolder) v.getTag();
 
-       final Ride p = ridesList.get(position);
+        final Ride p = ridesList.get(position);
 
         holder.addContact.setText("Add");
         holder.nameOfContact.setText(p.getName());
@@ -75,8 +81,29 @@ public class DriverHistoryAdapter extends ArrayAdapter<Ride> {
         holder.addContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // ToDo create dialog if you want to save contact
-                addToContacts(p);
+                // create dialog if you want to save contact
+                AlertDialog.Builder builder;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    builder = new AlertDialog.Builder(context, android.R.style.Theme_Material_Dialog_Alert);
+                } else {
+                    builder = new AlertDialog.Builder(context);
+                }
+                builder.setTitle("Save contact?")
+                        .setMessage("Are you sure you want to save this contact?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                addToContacts(p);
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+
             }
         });
         return v;
@@ -86,8 +113,45 @@ public class DriverHistoryAdapter extends ArrayAdapter<Ride> {
         ridesList = origRideList;
     }
 
-    public void addToContacts(Ride ride){
-        // ToDo implement adding the contact to phone
+    public void addToContacts(Ride ride) {
+        // implement adding the contact to phone
+        Intent intent = new Intent(ContactsContract.Intents.Insert.ACTION);
+        // Sets the MIME type to match the Contacts Provider
+        intent.setType(ContactsContract.RawContacts.CONTENT_TYPE);
+
+        // send the phone and name and email to the adding contract activity
+        intent.putExtra(ContactsContract.Intents.Insert.PHONE, ride.getPhone())
+                .putExtra(ContactsContract.Intents.Insert.NAME, ride.getName())
+                .putExtra(ContactsContract.Intents.Insert.EMAIL, ride.getEmail())
+                // to return to this app after saving contact
+                .putExtra("finishActivityOnSaveCompleted", true);
+
+        context.startActivity(intent);
+    }
+
+    /**
+     * check if the phone already exist in the contracts
+     *
+     * @param context the activity context
+     * @param number  phone number to check
+     * @return bool exist or not
+     * @see <a href="https://stackoverflow.com/questions/3505865/android-check-phone-number-present-in-contact-list-phone-number-retrieve-fr">stackoverflow</a>
+     */
+    private boolean isContactSavedOnPhone(Context context, String number) {
+        Uri lookupUri = Uri.withAppendedPath(
+                ContactsContract.PhoneLookup.CONTENT_FILTER_URI,
+                Uri.encode(number));
+        String[] mPhoneNumberProjection = {ContactsContract.PhoneLookup._ID, ContactsContract.PhoneLookup.NUMBER, ContactsContract.PhoneLookup.DISPLAY_NAME};
+        Cursor cur = context.getContentResolver().query(lookupUri, mPhoneNumberProjection, null, null, null);
+        try {
+            if (cur.moveToFirst()) {
+                return true;
+            }
+        } finally {
+            if (cur != null)
+                cur.close();
+        }
+        return false;
     }
 
     /* *********************************
@@ -105,14 +169,13 @@ public class DriverHistoryAdapter extends ArrayAdapter<Ride> {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults results = new FilterResults();
-            List<Ride> nRideList = ridesList;
-
-            // We implement here the filter logic
-            if (constraint == null || constraint.length() == 0 ) {
-                // No filter implemented we return all the list
-            } else {
-                // We perform filtering operation
+            List<Ride> nRideList = new ArrayList<Ride>();
+            for (Ride r : ridesList
+                    ) {
+                if (!isContactSavedOnPhone(context, r.getPhone()))
+                    nRideList.add(r);
             }
+
 
             results.values = nRideList;
             results.count = nRideList.size();
