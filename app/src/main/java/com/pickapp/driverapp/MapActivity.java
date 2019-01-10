@@ -73,7 +73,16 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         String rideId = getIntent().getStringExtra("rideId");
-        ride = backend.getRider(rideId);
+      new AsyncTask<String, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(String... str ) {
+                ride = backend.getRider(str[0]);
+                return null;
+            }
+        }.execute(rideId);
+
+
         View v = getWindow().getDecorView();
         callButton = (ImageButton) v.findViewById(R.id.call);
         smsButton = (ImageButton) v.findViewById(R.id.send_message);
@@ -131,22 +140,30 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             public void onClick(final View v) {
                 ride.setStatus(Ride.ClientRequestStatus.CLOSED);
                 ride.setFinishTime(new Date());
-                backend.updateRide(ride, new Backend.Action() {
-                    @Override
-                    public void onSuccess() {
-                        Toast.makeText(v.getContext(), "Ride complete!", Toast.LENGTH_LONG).show();
-                        finish();
-                    }
+                new AsyncTask<Ride, Void, Void>() {
 
                     @Override
-                    public void onFailure(Exception exception) {
-                        Toast.makeText(v.getContext(), "Error \n" + exception.getMessage(), Toast.LENGTH_LONG).show();
-                    }
+                    protected Void doInBackground(Ride... r ) {
+                        backend.updateRide(r[0], new Backend.Action() {
+                            @Override
+                            public void onSuccess() {
+                                Toast.makeText(v.getContext(), "Ride complete!", Toast.LENGTH_LONG).show();
+                                finish();
+                            }
 
-                    @Override
-                    public void onProgress(String status, double percent) {
+                            @Override
+                            public void onFailure(Exception exception) {
+                                Toast.makeText(v.getContext(), "Error \n" + exception.getMessage(), Toast.LENGTH_LONG).show();
+                            }
+
+                            @Override
+                            public void onProgress(String status, double percent) {
+                            }
+                        });
+                        return null;
                     }
-                });
+                }.execute(ride);
+
             }
         });
     }

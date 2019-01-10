@@ -189,30 +189,38 @@ public class LoginActivity extends AppCompatActivity {
             editor.commit();
 
             // checks if user and id exist in firebase
-            backend.isDriversPasswordCorrect(et_email, et_password, new Backend.Action() {
-                @Override
-                public void onSuccess() {
-                    // open driver activity
-                    try {
-                        mEmailSignInButton.setEnabled(true);
-                        Intent intent = new Intent(LoginActivity.this, DriverActivity.class);
-                        intent.putExtra("email",et_email);
-                        intent.putExtra("password",et_password);
-                        startActivity(intent);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
+            new AsyncTask<String, Void, Void>() {
 
                 @Override
-                public void onFailure(Exception e) {
-                    Toast.makeText(getBaseContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                    mEmailSignInButton.setEnabled(true);
-                }
+                protected Void doInBackground(String... str) {
+                    backend.isDriversPasswordCorrect(et_email, et_password, new Backend.Action() {
+                        @Override
+                        public void onSuccess() {
+                            // open driver activity
+                            try {
+                                mEmailSignInButton.setEnabled(true);
+                                Intent intent = new Intent(LoginActivity.this, DriverActivity.class);
+                                intent.putExtra("email",et_email);
+                                intent.putExtra("password",et_password);
+                                startActivity(intent);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
 
-                @Override
-                public void onProgress(String status, double percent) { }
-            });
+                        @Override
+                        public void onFailure(Exception e) {
+                            Toast.makeText(getBaseContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                            mEmailSignInButton.setEnabled(true);
+                        }
+
+                        @Override
+                        public void onProgress(String status, double percent) { }
+                    });
+                    return null;
+                }
+            }.execute(et_email, et_password);
+
 
         } catch (Exception e) {
             Toast.makeText(getBaseContext(), "Error ", Toast.LENGTH_LONG).show();

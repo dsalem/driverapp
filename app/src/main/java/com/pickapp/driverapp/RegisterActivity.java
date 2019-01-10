@@ -1,5 +1,6 @@
 package com.pickapp.driverapp;
 
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
@@ -106,40 +107,48 @@ public class RegisterActivity extends AppCompatActivity {
             final Driver myDriver = new Driver(et_lName, et_fName, et_id, et_phoneNumber, et_email, et_password, et_creditCard);
 
             // checks if there is a person with same id
-            backend.isDriverInDataBase(myDriver, new Backend.Action() {
+            new AsyncTask<Driver, Void, Void>() {
+
                 @Override
-                public void onSuccess() {
-                    // adds new account to database
-                    backend.addDriver(myDriver, new Backend.Action() {
+                protected Void doInBackground(Driver... str ) {
+                    backend.isDriverInDataBase(myDriver, new Backend.Action() {
                         @Override
                         public void onSuccess() {
-                            Toast.makeText(getBaseContext(), "successfully addded you to the database", Toast.LENGTH_LONG).show();
-                            resetView();
+                            // adds new account to database
+                            backend.addDriver(myDriver, new Backend.Action() {
+                                @Override
+                                public void onSuccess() {
+                                    Toast.makeText(getBaseContext(), "successfully addded you to the database", Toast.LENGTH_LONG).show();
+                                    resetView();
+                                }
+
+                                @Override
+                                public void onFailure(Exception exception) {
+                                    Toast.makeText(getBaseContext(), "Error \n" + exception.getMessage(), Toast.LENGTH_LONG).show();
+                                }
+
+                                @Override
+                                public void onProgress(String status, double percent) {}
+                            });
+
                         }
 
                         @Override
-                        public void onFailure(Exception exception) {
-                            Toast.makeText(getBaseContext(), "Error \n" + exception.getMessage(), Toast.LENGTH_LONG).show();
+                        public void onFailure(Exception e) {
+                            Toast.makeText(getBaseContext(), "Error \n" + e.getMessage(), Toast.LENGTH_LONG).show();
+
+                            registerButton.setEnabled(true);
                         }
 
                         @Override
-                        public void onProgress(String status, double percent) {}
+                        public void onProgress(String status, double percent) {
+
+                        }
                     });
-
+                    return null;
                 }
+            }.execute(myDriver);
 
-                @Override
-                public void onFailure(Exception e) {
-                    Toast.makeText(getBaseContext(), "Error \n" + e.getMessage(), Toast.LENGTH_LONG).show();
-
-                    registerButton.setEnabled(true);
-                }
-
-                @Override
-                public void onProgress(String status, double percent) {
-
-                }
-            });
 
             // Save info in the shared prefrences
 
