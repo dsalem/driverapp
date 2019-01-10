@@ -15,8 +15,6 @@ public interface Backend {
 
     void removeDriver(final String key, final Action action);
 
-    void updateRide(final Driver toUpdate, final Action action);
-
     void isDriverInDataBase(final Driver driver, final Action action);
 
     void isDriversPasswordCorrect(String dEmail ,String dPassword, final Action action);
@@ -31,8 +29,6 @@ public interface Backend {
 
     // Rides methods
     void addRide(final Ride Ride, final Action action);
-
-    void removeRide(String phone, final Action action);
 
     void updateRide(final Ride toUpdate, final Action action);
 

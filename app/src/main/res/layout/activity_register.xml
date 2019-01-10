@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/backgroundpic"
     tools:context=".RegisterActivity">
 
     <LinearLayout
@@ -13,8 +12,7 @@
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/TextLabel">
+            android:layout_height="wrap_content">
 
             <EditText
                 android:id="@+id/lastName"
@@ -29,8 +27,7 @@
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/TextLabel">
+            android:layout_height="wrap_content">
 
             <EditText
                 android:id="@+id/firstName"
@@ -45,8 +42,7 @@
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/TextLabel">
+            android:layout_height="wrap_content">
 
             <EditText
                 android:id="@+id/Id"
@@ -61,8 +57,7 @@
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/TextLabel">
+            android:layout_height="wrap_content">
 
             <EditText
                 android:id="@+id/PhoneNumber"
@@ -77,8 +72,7 @@
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/TextLabel">
+            android:layout_height="wrap_content">
 
             <EditText
                 android:id="@+id/email"
@@ -94,8 +88,7 @@
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/TextLabel">
+            android:layout_height="wrap_content">
 
             <EditText
                 android:id="@+id/Password"
@@ -110,8 +103,7 @@
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/TextLabel">
+            android:layout_height="wrap_content">
 
             <EditText
                 android:id="@+id/CreditCard"
@@ -127,7 +119,8 @@
         <Button
             android:id="@+id/register_button"
             style="@style/ButtonStyle1"
-            android:layout_width="match_parent"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="Register"

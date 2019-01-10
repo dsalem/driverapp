@@ -2,10 +2,19 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimaryLight">#B2EBF2</color>
+
+    <color name="colorsSecondary">#3F51B5</color>
+    <color name="colorSecondaryDark">#303F9F</color>
+    <color name="colorSecondaryLight">#B2EBF2</color>
+
+    <color name="colorAccent">#B2EBF2</color>
+
     <color name="orange">#FF4630</color>
     <color name="blue">#304FFE</color>
     <color name="lightWhite">#B2EBF2</color>
+    <color name="green">#69F0AE</color>
+    <color name="background">#A5D6A7</color>
 
     <color name="black_overlay">#66000000</color>
 </resources>
