@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -51,9 +52,28 @@ public class OpenRidesFragment extends Fragment {
         getActivity().setTitle("Find ride");
         final View view = inflater.inflate(R.layout.fragment_open_rides, container, false);
         backend = BackendFactory.getInstance();
-        rideList = backend.getWaitingList();
+        new AsyncTask<String, Void, Void>() {
+            @Override
+            protected Void doInBackground(String... str) {
+                rideList = backend.getWaitingList();
+                return null;
+            }
 
-        driver = backend.getDriver(email, password);
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+            }
+        }.execute("");
+
+        driver = new Driver();
+        new AsyncTask<String, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(String... str) {
+                driver = backend.getDriver(str[0], str[1]);
+                return null;
+            }
+        }.execute(email, password);
 
         adapter = new RidesAdapter(view.getContext(), rideList);
 
@@ -130,23 +150,34 @@ public class OpenRidesFragment extends Fragment {
                                 ride.setStatus(Ride.ClientRequestStatus.HANDLING);
                                 ride.setStartTime(new Date());
                                 ride.setDriverName(driver.getFirstName());
-
-                                backend.updateRide(ride, new Backend.Action() {
+                                new AsyncTask<Ride, Void, Void>() {
                                     @Override
-                                    public void onSuccess() {
-                                        Toast.makeText(v.getContext(), "Ride have been approved\n passenger is awaiting at:\n\t " + ride.getLocation(), Toast.LENGTH_LONG).show();
+                                    protected Void doInBackground(Ride... drv) {
+                                        backend.updateRide(drv[0], new Backend.Action() {
+                                            @Override
+                                            public void onSuccess() {
+                                                Toast.makeText(v.getContext(), "Ride have been approved\n passenger is awaiting at:\n\t " + ride.getLocation(), Toast.LENGTH_LONG).show();
 
+                                            }
+
+                                            @Override
+                                            public void onFailure(Exception exception) {
+                                                Toast.makeText(v.getContext(), "Error \n" + exception.getMessage(), Toast.LENGTH_LONG).show();
+                                            }
+
+                                            @Override
+                                            public void onProgress(String status, double percent) {
+                                            }
+                                        });
+                                        return null;
                                     }
 
                                     @Override
-                                    public void onFailure(Exception exception) {
-                                        Toast.makeText(v.getContext(), "Error \n" + exception.getMessage(), Toast.LENGTH_LONG).show();
+                                    protected void onPostExecute(Void aVoid) {
+                                        super.onPostExecute(aVoid);
                                     }
+                                }.execute(ride);
 
-                                    @Override
-                                    public void onProgress(String status, double percent) {
-                                    }
-                                });
                                 Intent intent = new Intent(getActivity(), MapActivity.class);
                                 intent.putExtra("rideId", ride.getRideId());
                                 startActivity(intent);
@@ -162,7 +193,5 @@ public class OpenRidesFragment extends Fragment {
                         .show();
             }
         });
-
-
     }
 }

@@ -10,6 +10,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -132,7 +133,18 @@ public class RidesAdapter extends ArrayAdapter<Ride> implements Filterable {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults results = new FilterResults();
-            List<Ride> nRideList = backend.getWaitingList();
+            new AsyncTask<String, Void, Void>() {
+                @Override
+                protected Void doInBackground(String... str) {
+                    ridesList = backend.getWaitingList();
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    super.onPostExecute(aVoid);
+                }
+            }.execute("");
             initiateLocation();
             location = getGpsLocation();
 
@@ -143,16 +155,16 @@ public class RidesAdapter extends ArrayAdapter<Ride> implements Filterable {
             } else {
                 // We perform filtering operation
                 List<Ride> temp = new ArrayList<Ride>();
-                for (Ride p : nRideList) {
+                for (Ride p : ridesList) {
                     if (calcDistanceToDestination(location, p.getLocation()) <= Float.valueOf(constraint.toString()))
                         temp.add(p);
 
                 }
-                nRideList = temp;
+                ridesList  = temp;
             }
 
-            results.values = nRideList;
-            results.count = nRideList.size();
+            results.values = ridesList;
+            results.count = ridesList.size();
             return results;
         }
 
