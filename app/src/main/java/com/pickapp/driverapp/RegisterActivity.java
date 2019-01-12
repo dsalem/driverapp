@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,7 +29,7 @@ public class RegisterActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
 
     private EditText lastName;
-    private EditText firtName;
+    private EditText firstName;
     private EditText id;
     private EditText phoneNumber;
     private EditText email;
@@ -47,8 +49,8 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
         backend = BackendFactory.getInstance();
         findViews();
-        resetView();
-
+        registerButton.setEnabled(false);
+        
         // GIVES THE OPTION TO GO BACK TO MAIN ACTIVITY
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -73,12 +75,25 @@ public class RegisterActivity extends AppCompatActivity {
     private void findViews() {
 
         lastName = (EditText) findViewById(R.id.lastName);
-        firtName = (EditText) findViewById(R.id.firstName);
+        lastName.addTextChangedListener(registerTextWatcher);
+        
+        firstName = (EditText) findViewById(R.id.firstName);
+        firstName.addTextChangedListener(registerTextWatcher);
+
         id = (EditText) findViewById(R.id.Id);
+        id.addTextChangedListener(registerTextWatcher);
+
         phoneNumber = (EditText) findViewById(R.id.PhoneNumber);
+        phoneNumber.addTextChangedListener(registerTextWatcher);
+
         email = (EditText) findViewById(R.id.email);
+        email.addTextChangedListener(registerTextWatcher);
+
         password = (EditText) findViewById(R.id.Password);
+        password.addTextChangedListener(registerTextWatcher);
+
         creditCard = (EditText) findViewById(R.id.CreditCard);
+        creditCard.addTextChangedListener(registerTextWatcher);
 
         sharedPreferences = getSharedPreferences(MyPreference, Context.MODE_PRIVATE);
 
@@ -95,7 +110,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         try {
             registerButton.setEnabled(false);
-            String et_fName = firtName.getText().toString();
+            String et_fName = firstName.getText().toString();
             String et_lName = lastName.getText().toString();
             String et_phoneNumber = phoneNumber.getText().toString();
             Long et_id = Long.parseLong(id.getText().toString());
@@ -118,7 +133,7 @@ public class RegisterActivity extends AppCompatActivity {
                             backend.addDriver(myDriver, new Backend.Action() {
                                 @Override
                                 public void onSuccess() {
-                                    Toast.makeText(getBaseContext(), "successfully addded you to the database", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getBaseContext(), "successfully added you to the database", Toast.LENGTH_LONG).show();
                                     resetView();
                                 }
 
@@ -150,7 +165,7 @@ public class RegisterActivity extends AppCompatActivity {
             }.execute(myDriver);
 
 
-            // Save info in the shared prefrences
+            // Save info in the shared preferences
 
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString(Email, et_email);
@@ -167,7 +182,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         // Reset errors.
         lastName.setError(null);
-        firtName.setError(null);
+        firstName.setError(null);
         id.setError(null);
         phoneNumber.setError(null);
         email.setError(null);
@@ -175,7 +190,7 @@ public class RegisterActivity extends AppCompatActivity {
         creditCard.setError(null);
 
         // Store values at the time of the login attempt.
-        String et_fName = firtName.getText().toString();
+        String et_fName = firstName.getText().toString();
         String et_lName = lastName.getText().toString();
 
         String et_phoneNumber = phoneNumber.getText().toString();
@@ -197,8 +212,8 @@ public class RegisterActivity extends AppCompatActivity {
 
         // Check for a first name, if the user entered one.
         if (TextUtils.isEmpty(et_fName)) {
-            firtName.setError("enter first name");
-            focusView = firtName;
+            firstName.setError("enter first name");
+            focusView = firstName;
             cancel = true;
         }
 
@@ -272,6 +287,38 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
+
+    /**
+     * a method that allows to enable order button unless all needed information is entered
+     */
+    private TextWatcher registerTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            String lastNameInput = lastName.getText().toString().trim();
+            String firstNameInput = firstName.getText().toString().trim();
+            String ideInput = id.getText().toString().trim();
+            String phoneNumberInput = phoneNumber.getText().toString().trim();
+            String emailInput = email.getText().toString().trim();
+            String passwordInput = password.getText().toString().trim();
+            String creditCardInput = creditCard.getText().toString().trim();
+
+            // all fields ,ust contain somthing inorder to enable register button
+            registerButton.setEnabled(!lastNameInput.isEmpty() && !firstNameInput.isEmpty()
+                    && !ideInput.isEmpty() && !phoneNumberInput.isEmpty() && !emailInput.isEmpty()
+                    && !passwordInput.isEmpty() && !creditCardInput.isEmpty());
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+        }
+    };
+    
     private boolean isEmailValid(String email) {
         String EMAIL_REGEX = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
         return email.matches(EMAIL_REGEX);
@@ -282,13 +329,13 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void resetView() {
-        lastName.setText("");
-        firtName.setText("");
-        id.setText("");
-        phoneNumber.setText("");
-        email.setText("");
-        password.setText("");
-        creditCard.setText("");
+        lastName.setText(" ");
+        firstName.setText(" ");
+        id.setText(" ");
+        phoneNumber.setText(" ");
+        email.setText(" ");
+        password.setText(" ");
+        creditCard.setText(" ");
     }
 
 }

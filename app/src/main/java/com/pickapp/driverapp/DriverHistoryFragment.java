@@ -22,7 +22,7 @@ import model.model.entities.Ride;
 public class DriverHistoryFragment extends Fragment {
 
 
-    private List<Ride> driversRideList = new ArrayList<Ride>();
+    private List<Ride> driversRideList;
     private DriverHistoryAdapter adapter;
     private Backend backend;
     Driver driver;
@@ -40,23 +40,16 @@ public class DriverHistoryFragment extends Fragment {
 
         String email = getArguments().getString("email");
         String password = getArguments().getString("password");
-
+        driversRideList = new ArrayList<Ride>();
         driver = new Driver();
         new AsyncTask<String, Void, Void>() {
 
             @Override
             protected Void doInBackground(String... str) {
                 driver = backend.getDriver(str[0], str[1]);
-                return null;
-            }
-        }.execute(email, password);
+                // gets all the rides that this driver took
+                driversRideList = backend.getDriverHistoryList(driver);
 
-
-        // gets all the rides that this driver took
-        new AsyncTask<Driver, Void, Void>() {
-            @Override
-            protected Void doInBackground(Driver... drv) {
-                driversRideList = backend.getDriverHistoryList(drv[0]);
                 return null;
             }
 
@@ -64,8 +57,7 @@ public class DriverHistoryFragment extends Fragment {
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
             }
-        }.execute(driver);
-
+        }.execute(email, password);
 
         adapter = new DriverHistoryAdapter(view.getContext(), driversRideList);
         myListView.setAdapter(adapter);
@@ -74,6 +66,4 @@ public class DriverHistoryFragment extends Fragment {
 
         return view;
     }
-
-
 }

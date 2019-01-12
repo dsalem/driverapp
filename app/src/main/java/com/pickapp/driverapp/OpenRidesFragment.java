@@ -23,6 +23,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -52,6 +53,7 @@ public class OpenRidesFragment extends Fragment {
         getActivity().setTitle("Find ride");
         final View view = inflater.inflate(R.layout.fragment_open_rides, container, false);
         backend = BackendFactory.getInstance();
+        rideList = new ArrayList<Ride>();
         new AsyncTask<String, Void, Void>() {
             @Override
             protected Void doInBackground(String... str) {
@@ -72,6 +74,12 @@ public class OpenRidesFragment extends Fragment {
             protected Void doInBackground(String... str) {
                 driver = backend.getDriver(str[0], str[1]);
                 return null;
+
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
             }
         }.execute(email, password);
 

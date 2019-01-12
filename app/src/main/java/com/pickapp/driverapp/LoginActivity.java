@@ -9,7 +9,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -88,6 +90,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void setListeners() {
+        mPasswordView.addTextChangedListener(loginTextWatcher);
+        mEmailView.addTextChangedListener(loginTextWatcher);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -226,6 +230,28 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(getBaseContext(), "Error ", Toast.LENGTH_LONG).show();
         }
     }
+
+    /**
+     * a method that allows to enable order button unless all needed information is entered
+     */
+    private TextWatcher loginTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            String userPasswordInput = mPasswordView.getText().toString().trim();
+            String userEmailInput = mEmailView.getText().toString().trim();
+            // there has to be text inorder to able clicking on sign in
+            mEmailSignInButton.setEnabled(!userPasswordInput.isEmpty() && !userEmailInput.isEmpty());
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+        }
+    };
 
     private boolean isEmailValid(String email) {
         String EMAIL_REGEX = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
