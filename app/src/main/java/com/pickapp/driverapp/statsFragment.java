@@ -2,6 +2,7 @@ package com.pickapp.driverapp;
 
 import android.app.Fragment;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -43,6 +44,9 @@ public class statsFragment extends Fragment {
     private ProgressBar goalsProgressBar;
     private WebView webView;
 
+    private int totalKms;
+    private Driver driver;
+
     private LineChartView lineChartView;
     String[] axisData = {"1", "2", "3", "4", "5", "6", "7", "8", "9",
             "10", "11", "12", "13", "14", "15", "16", "17", "18", "19",
@@ -64,24 +68,108 @@ public class statsFragment extends Fragment {
         getActivity().setTitle("View Stats");
         String email = getArguments().getString("email");
         String password = getArguments().getString("password");
-        Driver driver = backend.getDriver(email, password);
+
+      //  Driver driver = backend.getDriver(email, password);
+
+        driver = new Driver();
+        new AsyncTask<String, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(String... str) {
+                driver = backend.getDriver(str[0], str[1]);
+                return null;
+
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+            }
+        }.execute(email, password);
 
         // gets all the kms that this driver drove
 
-        int totalKms;
-        double totalEarnings;
-        totalKms = backend.totalKmsForDriver(driver);
-        textViewKm.setText(Integer.toString(totalKms));
-        totalEarnings = calcEarnings(totalKms);
+
+       // double totalEarnings;
+       // totalKms = backend.totalKmsForDriver(driver);
+
+        new AsyncTask<Driver, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Driver... drv) {
+                totalKms = backend.totalKmsForDriver(drv[0]);
+                return null;
+
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+            }
+        }.execute(driver);
+
+
+
+       // textViewKm.setText(Integer.toString(totalKms));
+       // totalEarnings = calcEarnings(totalKms);
 
         textViewKm.setText(Integer.toString(totalKms) + " KM");
-        textViewEarnings.setText(backend.getMonthlyEarnings(driver) + " shekels of goal");
+
+       // textViewEarnings.setText(backend.getMonthlyEarnings(driver) + " shekels of goal");
+
+        new AsyncTask<Driver, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Driver... drv) {
+                textViewEarnings.setText(backend.getMonthlyEarnings(driver) + " shekels of goal");
+                return null;
+
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+            }
+        }.execute(driver);
+
 
         goalsProgressBar.setMax(10000);
-        goalsProgressBar.setProgress(backend.getMonthlyEarnings(driver));
+
+       // goalsProgressBar.setProgress(backend.getMonthlyEarnings(driver));
+
+        new AsyncTask<Driver, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Driver... drv) {
+                goalsProgressBar.setProgress(backend.getMonthlyEarnings(driver));
+                return null;
+
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+            }
+        }.execute(driver);
 
 
-        yAxisData = backend.getMonthlyKms(driver);
+
+        new AsyncTask<Driver, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Driver... drv) {
+                yAxisData = backend.getMonthlyKms(drv[0]);
+                return null;
+
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+            }
+        }.execute(driver);
+
+
         List yAxisValues = new ArrayList();
         List axisValues = new ArrayList();
 
