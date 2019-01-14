@@ -104,6 +104,7 @@ public class StatsFragment extends Fragment {
                         textViewKm.setText(Integer.toString(totalKms) + " KM");
                     }
                 }.execute(driver);
+
                 new AsyncTask<Driver, Void, Void>() {
 
                     @Override
@@ -120,6 +121,7 @@ public class StatsFragment extends Fragment {
                         textViewEarnings.setText(earnings);
                     }
                 }.execute(driver);
+
                 new AsyncTask<Driver, Void, Void>() {
 
                     @Override
@@ -134,7 +136,6 @@ public class StatsFragment extends Fragment {
                         super.onPostExecute(aVoid);
                     }
                 }.execute(driver);
-
 
                 new AsyncTask<Driver, Void, Void>() {
 
@@ -159,7 +160,6 @@ public class StatsFragment extends Fragment {
             }
 
         }.execute(email, password);
-
 
         return view;
     }

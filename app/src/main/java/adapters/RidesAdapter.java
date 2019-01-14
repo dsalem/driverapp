@@ -94,7 +94,6 @@ public class RidesAdapter extends ArrayAdapter<Ride> implements Filterable {
             holder = (RideHolder) v.getTag();
 
         Ride p = ridesList.get(position);
-        // ToDo convert the location to smaller format using getPlace from ap1
 
         holder.rideLocationView.setText(p.getLocation().replaceAll(",", "\n"));
         holder.rideLengthView.setText(Float.toString(p.getLengthOfRide()) + " KM");
@@ -160,7 +159,7 @@ public class RidesAdapter extends ArrayAdapter<Ride> implements Filterable {
                         temp.add(p);
 
                 }
-                ridesList  = temp;
+                ridesList = temp;
             }
 
             results.values = ridesList;
@@ -214,11 +213,8 @@ public class RidesAdapter extends ArrayAdapter<Ride> implements Filterable {
     }
 
     public float calcDistanceToDestination(Location startLocation, String destination) {
-
-        //String startLocation = ride.getLocation();
         Context context = this.context;
 
-        // String destination = ride.getDestination();
         LatLng latLngDestination = getLocationFromAddress(context, destination);
         double endLatitude = latLngDestination.latitude;
         double endLongitude = latLngDestination.longitude;

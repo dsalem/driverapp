@@ -14,20 +14,21 @@
         android:orientation="horizontal">
 
         <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Waiting at:"
+            android:textSize="18dp"
+            android:textStyle="bold"/>
+        <TextView
             android:id="@+id/waiting_at"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:textSize="16dp"
-            android:textStyle="bold|italic" />
+            android:textSize="16dp" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Waiting at:"
-            android:textStyle="bold"/>
+
 
     </LinearLayout>
 
@@ -35,6 +36,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Ride length:"
+            android:textSize="18dp"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/ride_length"
@@ -42,15 +50,9 @@
             android:layout_height="wrap_content"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:textSize="16dp"
-            android:textStyle="bold|italic" />
+            android:textSize="16dp" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Ride length:"
-            android:textStyle="bold"/>
+
 
     </LinearLayout>
 </LinearLayout>

@@ -18,5 +18,5 @@
     <color name="green">#69F0AE</color>
     <color name="background">#FFFFFF</color>
 
-    <color name="black_overlay">#66000000</color>
+    <color name="black_overlay">#000000</color>
 </resources>

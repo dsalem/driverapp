@@ -16,7 +16,7 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
-                new Intent(context,DriverActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+                new Intent(context,LoginActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         String NOTIFICATION_CHANNEL_ID = "DriverApplication";

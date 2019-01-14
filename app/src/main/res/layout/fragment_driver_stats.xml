@@ -10,7 +10,7 @@
         android:layout_height="58dp"
         android:gravity="center_horizontal|center"
         android:textColor="@color/colorPrimary"
-        android:textSize="32dp" />
+        android:textSize="34dp" />
 
     <TextView
         android:id="@+id/textViewEarnings"
@@ -23,10 +23,12 @@
         android:layout_width="match_parent"
         android:layout_height="44dp"
         tools:theme="@style/Base.TextAppearance.AppCompat.Large"
-        android:paddingBottom="5dp"/>
+        android:paddingBottom="5dp"
+        android:padding="5dp"/>
 
     <lecho.lib.hellocharts.view.LineChartView
         android:id="@+id/chart"
+        android:padding="6dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
