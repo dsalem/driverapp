@@ -26,17 +26,19 @@ public class DriverHistoryFragment extends Fragment {
     private DriverHistoryAdapter adapter;
     private Backend backend;
     Driver driver;
+    View view;
+    ListView myListView;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_driver_history, container, false);
+        view = inflater.inflate(R.layout.fragment_driver_history, container, false);
         backend = BackendFactory.getInstance();
 
         getActivity().setTitle("View history");
         // listView
-        ListView myListView = (ListView) view.findViewById(R.id.ride_list_view);
+        myListView = (ListView) view.findViewById(R.id.ride_list_view);
 
         String email = getArguments().getString("email");
         String password = getArguments().getString("password");
@@ -47,22 +49,34 @@ public class DriverHistoryFragment extends Fragment {
             @Override
             protected Void doInBackground(String... str) {
                 driver = backend.getDriver(str[0], str[1]);
-                // gets all the rides that this driver took
-                driversRideList = backend.getDriverHistoryList(driver);
-
                 return null;
             }
 
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
+                new AsyncTask<Driver, Void, Void>() {
+
+                    @Override
+                    protected Void doInBackground(Driver... drv) {
+
+                        // gets all the rides that this driver took
+                        driversRideList = backend.getDriverHistoryList(drv[0]);
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Void aVoid) {
+                        super.onPostExecute(aVoid);
+                        // sets the view after getting all informayion from DB
+                        adapter = new DriverHistoryAdapter(view.getContext(), driversRideList);
+                        myListView.setAdapter(adapter);
+                        myListView.setEmptyView(view.findViewById(R.id.no_history));
+                        registerForContextMenu(myListView);
+                    }
+                }.execute(driver);
             }
         }.execute(email, password);
-
-        adapter = new DriverHistoryAdapter(view.getContext(), driversRideList);
-        myListView.setAdapter(adapter);
-        myListView.setEmptyView(view.findViewById(R.id.no_history));
-        registerForContextMenu(myListView);
 
         return view;
     }

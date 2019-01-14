@@ -67,7 +67,6 @@ public class DriverActivity extends AppCompatActivity
         Intent intent = getIntent();
         bundle.putString("email", intent.getStringExtra("email"));
         bundle.putString("password", intent.getStringExtra("password"));
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
