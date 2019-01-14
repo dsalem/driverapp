@@ -33,10 +33,10 @@ import model.model.entities.Driver;
 import model.model.entities.Ride;
 import model.model.datasource.Firebase_DBManager;
 
-public class statsFragment extends Fragment {
+public class StatsFragment extends Fragment {
 
 
-  //  private List<Ride> driversRideList = new ArrayList<Ride>();
+    //  private List<Ride> driversRideList = new ArrayList<Ride>();
     private Backend backend;
     private TextView textViewKm;
     private TextView textViewEarnings;
@@ -47,11 +47,14 @@ public class statsFragment extends Fragment {
     private int totalKms;
     private Driver driver;
 
+    String earnings;
+
+    LineChartData data;
     private LineChartView lineChartView;
     String[] axisData = {"1", "2", "3", "4", "5", "6", "7", "8", "9",
             "10", "11", "12", "13", "14", "15", "16", "17", "18", "19",
-            "20","21", "22", "23", "24", "25", "26", "27", "28", "29",
-            "30","31"};
+            "20", "21", "22", "23", "24", "25", "26", "27", "28", "29",
+            "30", "31"};
     int[] yAxisData = {50, 20, 15, 30, 20, 60, 15, 40, 45, 10, 90, 18};
 
 
@@ -69,9 +72,10 @@ public class statsFragment extends Fragment {
         String email = getArguments().getString("email");
         String password = getArguments().getString("password");
 
-      //  Driver driver = backend.getDriver(email, password);
+        //  Driver driver = backend.getDriver(email, password);
 
         driver = new Driver();
+        goalsProgressBar.setMax(10000);
         new AsyncTask<String, Void, Void>() {
 
             @Override
@@ -84,95 +88,94 @@ public class statsFragment extends Fragment {
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
+                new AsyncTask<Driver, Void, Void>() {
+
+                    @Override
+                    protected Void doInBackground(Driver... drv) {
+                        // gets all the kms that this driver drove
+                        totalKms = backend.totalKmsForDriver(drv[0]);
+                        return null;
+
+                    }
+
+                    @Override
+                    protected void onPostExecute(Void aVoid) {
+                        super.onPostExecute(aVoid);
+                        textViewKm.setText(Integer.toString(totalKms) + " KM");
+                    }
+                }.execute(driver);
+                new AsyncTask<Driver, Void, Void>() {
+
+                    @Override
+                    protected Void doInBackground(Driver... drv) {
+                        earnings = backend.getMonthlyEarnings(driver) + " shekels of goal";
+
+                        return null;
+
+                    }
+
+                    @Override
+                    protected void onPostExecute(Void aVoid) {
+                        super.onPostExecute(aVoid);
+                        textViewEarnings.setText(earnings);
+                    }
+                }.execute(driver);
+                new AsyncTask<Driver, Void, Void>() {
+
+                    @Override
+                    protected Void doInBackground(Driver... drv) {
+                        goalsProgressBar.setProgress(backend.getMonthlyEarnings(driver));
+                        return null;
+
+                    }
+
+                    @Override
+                    protected void onPostExecute(Void aVoid) {
+                        super.onPostExecute(aVoid);
+                    }
+                }.execute(driver);
+
+
+                new AsyncTask<Driver, Void, Void>() {
+
+                    @Override
+                    protected Void doInBackground(Driver... drv) {
+                        yAxisData = backend.getMonthlyKms(drv[0]);
+                        return null;
+
+                    }
+
+                    @Override
+                    protected void onPostExecute(Void aVoid) {
+                        super.onPostExecute(aVoid);
+                        makeLineGraph();
+                        lineChartView.setLineChartData(data);
+                        Viewport viewport = new Viewport(lineChartView.getMaximumViewport());
+                        viewport.top = 150;
+                        lineChartView.setMaximumViewport(viewport);
+                        lineChartView.setCurrentViewport(viewport);
+                    }
+                }.execute(driver);
             }
+
         }.execute(email, password);
 
-        // gets all the kms that this driver drove
 
+        return view;
+    }
 
-       // double totalEarnings;
-       // totalKms = backend.totalKmsForDriver(driver);
+    public void findViews(View v) {
+        textViewKm = (TextView) v.findViewById(R.id.textViewKm);
+        textViewEarnings = (TextView) v.findViewById(R.id.textViewEarnings);
 
-        new AsyncTask<Driver, Void, Void>() {
+        goalsProgressBar = (ProgressBar) v.findViewById(R.id.progressBar);
+        lineChartView = (LineChartView) v.findViewById(R.id.chart);
 
-            @Override
-            protected Void doInBackground(Driver... drv) {
-                totalKms = backend.totalKmsForDriver(drv[0]);
-                return null;
+    }
 
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-            }
-        }.execute(driver);
-
-
-
-       // textViewKm.setText(Integer.toString(totalKms));
-       // totalEarnings = calcEarnings(totalKms);
-
-        textViewKm.setText(Integer.toString(totalKms) + " KM");
-
-       // textViewEarnings.setText(backend.getMonthlyEarnings(driver) + " shekels of goal");
-
-        new AsyncTask<Driver, Void, Void>() {
-
-            @Override
-            protected Void doInBackground(Driver... drv) {
-                textViewEarnings.setText(backend.getMonthlyEarnings(driver) + " shekels of goal");
-                return null;
-
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-            }
-        }.execute(driver);
-
-
-        goalsProgressBar.setMax(10000);
-
-       // goalsProgressBar.setProgress(backend.getMonthlyEarnings(driver));
-
-        new AsyncTask<Driver, Void, Void>() {
-
-            @Override
-            protected Void doInBackground(Driver... drv) {
-                goalsProgressBar.setProgress(backend.getMonthlyEarnings(driver));
-                return null;
-
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-            }
-        }.execute(driver);
-
-
-
-        new AsyncTask<Driver, Void, Void>() {
-
-            @Override
-            protected Void doInBackground(Driver... drv) {
-                yAxisData = backend.getMonthlyKms(drv[0]);
-                return null;
-
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-            }
-        }.execute(driver);
-
-
+    private void makeLineGraph() {
         List yAxisValues = new ArrayList();
         List axisValues = new ArrayList();
-
 
         Line line = new Line(yAxisValues).setColor(Color.parseColor("#9C27B0"));
 
@@ -187,7 +190,7 @@ public class statsFragment extends Fragment {
         List lines = new ArrayList();
         lines.add(line);
 
-        LineChartData data = new LineChartData();
+        data = new LineChartData();
         data.setLines(lines);
 
         Axis axis = new Axis();
@@ -201,24 +204,6 @@ public class statsFragment extends Fragment {
         yAxis.setTextColor(Color.parseColor("#03A9F4"));
         yAxis.setTextSize(16);
         data.setAxisYLeft(yAxis);
-
-        lineChartView.setLineChartData(data);
-        Viewport viewport = new Viewport(lineChartView.getMaximumViewport());
-        viewport.top = 150;
-        lineChartView.setMaximumViewport(viewport);
-        lineChartView.setCurrentViewport(viewport);
-
-
-        return view;
-    }
-
-    public void findViews(View v) {
-        textViewKm = (TextView) v.findViewById(R.id.textViewKm);
-        textViewEarnings = (TextView) v.findViewById(R.id.textViewEarnings);
-
-        goalsProgressBar = (ProgressBar) v.findViewById(R.id.progressBar);
-        lineChartView = (LineChartView) v.findViewById(R.id.chart);
-
 
     }
 

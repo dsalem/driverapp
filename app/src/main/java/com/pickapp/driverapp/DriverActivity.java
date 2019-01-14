@@ -1,13 +1,11 @@
 package com.pickapp.driverapp;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -108,7 +106,7 @@ public class DriverActivity extends AppCompatActivity
         } else if (id == R.id.nav_view_history) {
            createFragment(new DriverHistoryFragment());
         } else if (id == R.id.nav_stats) {
-            createFragment(new statsFragment());
+            createFragment(new StatsFragment());
         } else if (id == R.id.nav_log_out) {
             AlertDialog.Builder builder;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
