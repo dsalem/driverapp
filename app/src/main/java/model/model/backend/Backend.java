@@ -13,8 +13,6 @@ public interface Backend {
     // Driver methods
     void addDriver(final Driver Driver, final Action action);
 
-    void removeDriver(final String key, final Action action);
-
     void isDriverInDataBase(final Driver driver, final Action action);
 
     void isDriversPasswordCorrect(String dEmail ,String dPassword, final Action action);

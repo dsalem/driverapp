@@ -84,62 +84,13 @@ public class Firebase_DBManager implements Backend {
         });
     }
 
-    public void removeDriver(final String key, final Action action) {
-
-        DriversRef.child(key).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                final Driver value = dataSnapshot.getValue(Driver.class);
-                if (value == null)
-                    action.onFailure(new Exception("Driver not found ..."));
-                else {
-                    DriversRef.child(key).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            action.onSuccess();
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            action.onFailure(e);
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                action.onFailure(databaseError.toException());
-            }
-        });
-    }
-
-    public void updateRide(final Driver toUpdate, final Action action) {
-
-        removeDriver(toUpdate.getHashId(), new Action<Long>() {
-            @Override
-            public void onSuccess() {
-                addDriver(toUpdate, action);
-            }
-
-            @Override
-            public void onFailure(Exception exception) {
-                action.onFailure(exception);
-            }
-
-            @Override
-            public void onProgress(String status, double percent) {
-                action.onProgress(status, percent);
-            }
-        });
-    }
 
     private static ChildEventListener DriverRefChildEventListener;
 
     public void notifyToDriverList(final NotifyDataChange<List<Driver>> notifyDataChange) {
         if (notifyDataChange != null) {
             if (DriverRefChildEventListener != null) {
-                notifyDataChange.onFailure(new Exception("first unNotify Driver list"));
+                // notifyDataChange.onFailure(new Exception("first unNotify Driver list"));
                 return;
             }
             DriverList.clear();
@@ -222,7 +173,6 @@ public class Firebase_DBManager implements Backend {
     }
 
     public Driver getDriver(String email, final String password) {
-
         Driver driver = new Driver();
         for (Driver d : DriverList
                 ) {
@@ -230,24 +180,6 @@ public class Firebase_DBManager implements Backend {
                 driver = d;
         }
         return driver;
-        /*final Driver[] currentDriver = new Driver[1];
-
-        Query query = DriversRef.orderByChild("emailAddress").equalTo(email);
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists())
-                    currentDriver[0] = dataSnapshot.getChildren().iterator().next().getValue(Driver.class);
-                else
-                    currentDriver[0] = new Driver();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
-
-        return currentDriver[0];*/
     }
 
     public void isDriversPasswordCorrect(String dEmail, final String dPassword, final Action action) {
@@ -282,9 +214,7 @@ public class Firebase_DBManager implements Backend {
                     kms += r.getLengthOfRide();
             }
         }
-
         return kms;
-
     }
 
     public int[] getMonthlyKms(Driver driver) {
@@ -310,7 +240,7 @@ public class Firebase_DBManager implements Backend {
             if (r.getStatus() == (Ride.ClientRequestStatus.CLOSED)) {
                 if (r.getFinishTime().getMonth() == currentMonth)
                     if (r.getDriverName().equals(driver.getFirstName()))
-                        monthlyEarnings += r.getLengthOfRide()*5;
+                        monthlyEarnings += r.getLengthOfRide() * 5;
             }
         }
         return monthlyEarnings;
@@ -418,7 +348,7 @@ public class Firebase_DBManager implements Backend {
         if (notifyDataChange != null) {
 
             if (RideRefChildEventListener != null) {
-                notifyDataChange.onFailure(new Exception("first unNotify Ride list"));
+               // notifyDataChange.onFailure(new Exception("first unNotify Ride list"));
                 return;
             }
             RideList.clear();
@@ -470,12 +400,4 @@ public class Firebase_DBManager implements Backend {
             RidesRef.addChildEventListener(RideRefChildEventListener);
         }
     }
-
-    public static void stopNotifyToRideList() {
-        if (RideRefChildEventListener != null) {
-            RidesRef.removeEventListener(RideRefChildEventListener);
-            RideRefChildEventListener = null;
-        }
-    }
-
 }

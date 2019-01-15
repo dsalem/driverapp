@@ -71,7 +71,7 @@ public class DriverHistoryAdapter extends ArrayAdapter<Ride> {
             // Now we can fill the layout with the right values
             holder.addContact = (ImageButton) v.findViewById(R.id.add_button);
             holder.nameOfContact = (TextView) v.findViewById(R.id.contact_name);
-
+            holder.phoneOfContact = (TextView) v.findViewById(R.id.contact_phone);
             v.setTag(holder);
         } else
             holder = (RideHistoryHolder) v.getTag();
@@ -79,6 +79,7 @@ public class DriverHistoryAdapter extends ArrayAdapter<Ride> {
         final Ride p = ridesList.get(position);
 
         holder.nameOfContact.setText(p.getName());
+        holder.phoneOfContact.setText(p.getPhone());
         Random rand = new Random();
         holder.addContact.setBackgroundColor(Color.argb(200
                 , rand.nextInt(255), rand.nextInt(255), rand.nextInt(255)));
@@ -166,6 +167,7 @@ public class DriverHistoryAdapter extends ArrayAdapter<Ride> {
     private static class RideHistoryHolder {
         public ImageButton addContact;
         public TextView nameOfContact;
+        public TextView phoneOfContact;
     }
 
     private class RideFilter extends Filter {
