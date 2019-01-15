@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
@@ -17,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Filter;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +28,7 @@ import com.pickapp.driverapp.R;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import model.model.entities.Ride;
 
@@ -66,7 +69,7 @@ public class DriverHistoryAdapter extends ArrayAdapter<Ride> {
             v = inflater.inflate(R.layout.add_contact_row_layout, null);
 
             // Now we can fill the layout with the right values
-            holder.addContact = (Button) v.findViewById(R.id.add_button);
+            holder.addContact = (ImageButton) v.findViewById(R.id.add_button);
             holder.nameOfContact = (TextView) v.findViewById(R.id.contact_name);
 
             v.setTag(holder);
@@ -75,9 +78,9 @@ public class DriverHistoryAdapter extends ArrayAdapter<Ride> {
 
         final Ride p = ridesList.get(position);
 
-        holder.addContact.setText("Add");
         holder.nameOfContact.setText(p.getName());
-
+        Random rand = new Random();
+        holder.addContact.setBackgroundColor(Color.argb(200, rand.nextInt(255), rand.nextInt(255), rand.nextInt(255)));
         holder.addContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -160,7 +163,7 @@ public class DriverHistoryAdapter extends ArrayAdapter<Ride> {
      * **********************************/
 
     private static class RideHistoryHolder {
-        public Button addContact;
+        public ImageButton addContact;
         public TextView nameOfContact;
     }
 
