@@ -2,6 +2,7 @@ package com.pickapp.driverapp;
 
 import android.app.Fragment;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -177,7 +178,7 @@ public class StatsFragment extends Fragment {
         List yAxisValues = new ArrayList();
         List axisValues = new ArrayList();
 
-        Line line = new Line(yAxisValues).setColor(Color.parseColor("#9C27B0"));
+        Line line = new Line(yAxisValues).setColor(Color.parseColor("#0D47A1"));
 
         for (int i = 0; i < axisData.length; i++) {
             axisValues.add(i, new AxisValue(i).setLabel(axisData[i]));

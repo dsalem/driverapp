@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">driver app</string>
+    <string name="app_name">Driver PickApp</string>
     <string name="map_activity">map</string>
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
