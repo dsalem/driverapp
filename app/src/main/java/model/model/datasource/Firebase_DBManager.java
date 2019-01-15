@@ -293,9 +293,9 @@ public class Firebase_DBManager implements Backend {
         int currentMonth = c.get(Calendar.MONTH);
         for (Ride r : RideList) {
             if (r.getStatus() == (Ride.ClientRequestStatus.CLOSED)) {
-                if (r.getStartTime().getMonth() == currentMonth)
+                if (r.getFinishTime().getMonth() == currentMonth)
                     if (r.getDriverName().equals(driver.getFirstName()))
-                        monthlyKms[r.getStartTime().getDate()] += r.getLengthOfRide();
+                        monthlyKms[r.getFinishTime().getDate()] += r.getLengthOfRide();
             }
         }
         return monthlyKms;
@@ -308,7 +308,7 @@ public class Firebase_DBManager implements Backend {
         int currentMonth = c.get(Calendar.MONTH);
         for (Ride r : RideList) {
             if (r.getStatus() == (Ride.ClientRequestStatus.CLOSED)) {
-                if (r.getStartTime().getMonth() == currentMonth)
+                if (r.getFinishTime().getMonth() == currentMonth)
                     if (r.getDriverName().equals(driver.getFirstName()))
                         monthlyEarnings += r.getLengthOfRide()*5;
             }
