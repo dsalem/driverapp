@@ -36,7 +36,7 @@ public class DriverHistoryFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_driver_history, container, false);
         backend = BackendFactory.getInstance();
 
-        getActivity().setTitle("View history");
+        getActivity().setTitle("Add contact");
         // listView
         myListView = (ListView) view.findViewById(R.id.ride_list_view);
 

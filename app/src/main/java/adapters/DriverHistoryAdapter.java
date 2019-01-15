@@ -80,7 +80,8 @@ public class DriverHistoryAdapter extends ArrayAdapter<Ride> {
 
         holder.nameOfContact.setText(p.getName());
         Random rand = new Random();
-        holder.addContact.setBackgroundColor(Color.argb(200, rand.nextInt(255), rand.nextInt(255), rand.nextInt(255)));
+        holder.addContact.setBackgroundColor(Color.argb(200
+                , rand.nextInt(255), rand.nextInt(255), rand.nextInt(255)));
         holder.addContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
