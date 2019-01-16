@@ -3,8 +3,12 @@ package com.pickapp.driverapp;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -23,8 +27,11 @@ import android.widget.TextView;
 import android.content.SharedPreferences;
 import android.widget.Toast;
 
+import java.util.Date;
+
 import model.model.backend.Backend;
 import model.model.backend.BackendFactory;
+import model.model.entities.Ride;
 
 /**
  * A login screen that offers login via email/password.
@@ -183,6 +190,25 @@ public class LoginActivity extends AppCompatActivity {
     public void signIn() {
         try {
             mEmailSignInButton.setEnabled(false);
+            if (!isTheirInternetConnection()) {
+                AlertDialog.Builder builder;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+                } else {
+                    builder = new AlertDialog.Builder(this);
+                }
+                builder.setTitle("No internet connection")
+                        .setMessage("there is no internet connection try again later.")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                mEmailSignInButton.setEnabled(true);
+                                return;
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+            }
+
             final String et_email = mEmailView.getText().toString();
             final String et_password = mPasswordView.getText().toString();
 
@@ -204,8 +230,8 @@ public class LoginActivity extends AppCompatActivity {
                             try {
                                 mEmailSignInButton.setEnabled(true);
                                 Intent intent = new Intent(LoginActivity.this, DriverActivity.class);
-                                intent.putExtra("email",et_email);
-                                intent.putExtra("password",et_password);
+                                intent.putExtra("email", et_email);
+                                intent.putExtra("password", et_password);
                                 startActivity(intent);
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -219,7 +245,8 @@ public class LoginActivity extends AppCompatActivity {
                         }
 
                         @Override
-                        public void onProgress(String status, double percent) { }
+                        public void onProgress(String status, double percent) {
+                        }
                     });
                     return null;
                 }
@@ -260,6 +287,12 @@ public class LoginActivity extends AppCompatActivity {
 
     private boolean isPasswordValid(String password) {
         return password.length() > 4;
+    }
+
+    private boolean isTheirInternetConnection() {
+        NetworkInfo info = (NetworkInfo) ((ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
+        return info == null;
     }
 
     /**
