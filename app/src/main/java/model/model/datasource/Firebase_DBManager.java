@@ -146,13 +146,6 @@ public class Firebase_DBManager implements Backend {
         }
     }
 
-    public void stopNotifyToDriverList() {
-        if (DriverRefChildEventListener != null) {
-            DriversRef.removeEventListener(DriverRefChildEventListener);
-            DriverRefChildEventListener = null;
-        }
-    }
-
     public void isDriverInDataBase(final Driver driver, final Action action) {
         Query query = DriversRef.orderByChild("id").equalTo(driver.getId());
         query.addListenerForSingleValueEvent(new ValueEventListener() {
