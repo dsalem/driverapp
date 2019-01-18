@@ -241,7 +241,6 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onFailure(Exception e) {
                             Toast.makeText(getBaseContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                            mEmailSignInButton.setEnabled(true);
                         }
 
                         @Override
@@ -251,7 +250,7 @@ public class LoginActivity extends AppCompatActivity {
                     return null;
                 }
             }.execute(et_email, et_password);
-
+            mEmailSignInButton.setEnabled(true);
 
         } catch (Exception e) {
             Toast.makeText(getBaseContext(), "Error ", Toast.LENGTH_LONG).show();
@@ -290,9 +289,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private boolean isTheirInternetConnection() {
-        NetworkInfo info = (NetworkInfo) ((ConnectivityManager)
-                getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
-        return info == null;
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo.getType() == ConnectivityManager.TYPE_WIFI && activeNetworkInfo.isConnectedOrConnecting();
     }
 
     /**
