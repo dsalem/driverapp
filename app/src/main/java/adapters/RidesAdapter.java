@@ -94,9 +94,9 @@ public class RidesAdapter extends ArrayAdapter<Ride> implements Filterable {
             holder = (RideHolder) v.getTag();
 
         Ride p = ridesList.get(position);
-DecimalFormat decimalFormat = new DecimalFormat("#.##");
+        DecimalFormat decimalFormat = new DecimalFormat("#.##");
         holder.rideLocationView.setText(p.getLocation().replaceAll(",", "\n"));
-        holder.rideLengthView.setText(decimalFormat.format(p.getLengthOfRide())  + " KM");
+        holder.rideLengthView.setText(decimalFormat.format(p.getLengthOfRide()) + " KM");
         return v;
     }
 

@@ -153,7 +153,7 @@ public class StatsFragment extends Fragment {
                         makeLineGraph();
                         lineChartView.setLineChartData(data);
                         Viewport viewport = new Viewport(lineChartView.getMaximumViewport());
-                        viewport.top = 150;
+                        viewport.top = 300;
                         lineChartView.setMaximumViewport(viewport);
                         lineChartView.setCurrentViewport(viewport);
                     }
