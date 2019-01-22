@@ -1,17 +1,22 @@
 package adapters;
 
 import android.app.AlertDialog;
+import android.content.ContentProviderOperation;
+import android.content.ContentProviderResult;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Build;
+import android.os.RemoteException;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -119,6 +124,67 @@ public class DriverHistoryAdapter extends ArrayAdapter<Ride> {
     }
 
     public void addToContacts(Ride ride) {
+
+        // OPTION A
+        ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
+        int rawContactInsertIndex = ops.size();
+
+        ops.add(ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI)
+                .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, null)
+                .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null)
+                .build());
+
+        //INSERT NAME
+        ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+                .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, rawContactInsertIndex)
+                .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
+                .withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, ride.getName()) // Name of the person
+                .withValue(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME, ride.getName())
+                .build());
+
+        //INSERT PHONE
+        ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+                .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, rawContactInsertIndex)
+                .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
+                .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, ride.getPhone()) // Number of the person
+                .withValue(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE)
+                .build());
+
+        //INSERT EMAIL
+        ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+                .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, rawContactInsertIndex)
+                .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE)
+                .withValue(ContactsContract.CommonDataKinds.Email.DATA, ride.getEmail())
+                .withValue(ContactsContract.CommonDataKinds.Email.TYPE, ContactsContract.CommonDataKinds.Email.TYPE_WORK)
+                .build());
+        Uri newContactUri = null;
+        
+        //PUSH EVERYTHING TO CONTACTS
+        try {
+            ContentProviderResult[] res = context.getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
+            if (res != null && res[0] != null) {
+                newContactUri = res[0].uri;
+                //02-20 22:21:09 URI added contact:content://com.android.contacts/raw_contacts/612
+
+            } else
+                Toast.makeText(context, "Contact not added.", Toast.LENGTH_LONG).show();
+        } catch (RemoteException e) {
+            // error
+            Toast.makeText(context, "Error (1) adding contact.", Toast.LENGTH_LONG).show();
+            newContactUri = null;
+        } catch (OperationApplicationException e) {
+            // error
+            Toast.makeText(context, "Error (2) adding contact.", Toast.LENGTH_LONG).show();
+            newContactUri = null;
+        }
+        Toast.makeText(context, "Contact added to system contacts.", Toast.LENGTH_LONG).show();
+
+        if (newContactUri == null) {
+            Toast.makeText(context, "Error creating contact", Toast.LENGTH_LONG).show();
+        }
+
+        /*
+        // OPTION B
         // implement adding the contact to phone
         Intent intent = new Intent(ContactsContract.Intents.Insert.ACTION);
         // Sets the MIME type to match the Contacts Provider
@@ -131,7 +197,7 @@ public class DriverHistoryAdapter extends ArrayAdapter<Ride> {
                 // to return to this app after saving contact
                 .putExtra("finishActivityOnSaveCompleted", true);
 
-        context.startActivity(intent);
+        context.startActivity(intent);*/
     }
 
     /**
