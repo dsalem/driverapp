@@ -11,10 +11,25 @@ After thedriver enters his profile he can view a list of reent requests and filt
 A map will be displayed to the driver guiding him to his distination.
 Other fetueres that the app provieds is a statistic fragment that displays all of the driver recent activity.
 
-<p>
-  <img src="/images/loading.jpg" height="400" width="250" > <br>
-  <img src="/images/order_ride.jpg" height="400" width="250" > <br>
-</p>
+![](/images/login.jpg)
+:--:
+*login activity*
+
+![](/images/register.jpg)
+:--:
+*registeer activity*
+
+![](/images/rides_list.png)
+:--:
+*rides list*
+
+![](/images/map.jpg)
+:--:
+*map activity*
+
+![](/images/stats.jpg)
+:--:
+*stats fragment*
 
 ### Authors
 * [Asher Alexander](https://github.com/asher99)
