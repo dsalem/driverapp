@@ -6,10 +6,10 @@ This app allows a driver to see all the people the requesting a ride filtering b
 uses google maps api and firebase database.
 
 ### Description
-The driver app contains a login activity that lets drivers into there personal profile or create a new one.
-After thedriver enters his profile he can view a list of reent requests and filter them by distance, if the driver picked a ride from that list a message will be send to the passanger.
+The driver app contains a login activity that lets drivers into their personal profile or create a new one.
+After the driver enters his profile he can view a list of resent requests and filter them by distance, if the driver picked a ride from that list a message will be send to the passanger.
 A map will be displayed to the driver guiding him to his distination.
-Other fetueres that the app provieds is a statistic fragment that displays all of the driver recent activity.
+Other features that the app provides is a statistic fragment that displays all of the driver recent activity.
 
 ![](/images/login.jpg)
 :--:
